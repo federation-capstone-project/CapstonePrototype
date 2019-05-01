@@ -1,6 +1,7 @@
 package au.edu.federation.capstoneprototype;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -33,8 +34,20 @@ public class BeaconAdapter extends ArrayAdapter<Beacon> {
         TextView beaconMac = convertView.findViewById(R.id.beacon_mac);
         beaconMac.setText(beacon.macAddress);
 
-        Button savebutton = convertView.findViewById(R.id.save_button);
+        Button saveButton = convertView.findViewById(R.id.save_button);
         TextView visible = convertView.findViewById(R.id.beacon_available);
+
+        if (showSave) {
+            visible.setVisibility(View.GONE);
+            saveButton.setOnClickListener (new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Log.w("Prototype", String.format("saved %s", beacon.name));
+                }
+            });
+        } else {
+            saveButton.setVisibility(View.GONE);
+        }
 
         return convertView;
     }

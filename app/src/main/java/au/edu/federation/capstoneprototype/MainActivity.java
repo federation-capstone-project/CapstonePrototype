@@ -1,14 +1,15 @@
 package au.edu.federation.capstoneprototype;
 
 import android.bluetooth.BluetoothAdapter;
+import android.content.Intent;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
 import android.widget.ListView;
 
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
 
 public class MainActivity extends AppCompatActivity {
     ArrayList<Beacon> savedDevices;
@@ -23,6 +24,16 @@ public class MainActivity extends AppCompatActivity {
         if (btAdapter == null) {
             Log.w("Prototype", "Bluetooth adapter not found");
         }
+
+        FloatingActionButton addButton = findViewById(R.id.add_beacon);
+        addButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Log.w("Prototype", "opening add beacon activity");
+                Intent intent = new Intent(getApplicationContext(), AddBeacon.class);
+                startActivityForResult(intent, 1);
+            }
+        });
 
         savedDevices = new ArrayList<Beacon>();
         savedDevices.add (new Beacon(
