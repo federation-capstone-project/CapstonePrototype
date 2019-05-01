@@ -11,13 +11,6 @@ public class MainActivity extends AppCompatActivity {
     ArrayList<Beacon> savedDevices;
     ArrayList<Beacon> visibleDevices;
 
-    private class Beacon {
-        String name;
-        String btClass;
-        String macAddress;
-        String lastSeen;
-    }
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
