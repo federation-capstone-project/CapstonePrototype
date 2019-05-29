@@ -10,12 +10,13 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class BeaconAdapter extends ArrayAdapter<Beacon> {
-    ArrayList<Beacon> list;
+    List<Beacon> list;
     boolean showSave;
 
-    public BeaconAdapter(Context context, ArrayList<Beacon> list, boolean saveButton) {
+    public BeaconAdapter(Context context, List<Beacon> list, boolean saveButton) {
         super (context, R.layout.beacon, list);
         this.list = list;
         this.showSave = saveButton;
@@ -29,7 +30,12 @@ public class BeaconAdapter extends ArrayAdapter<Beacon> {
         final Beacon beacon = list.get(position);
 
         TextView beaconName = convertView.findViewById(R.id.beacon_name);
-        beaconName.setText(beacon.name);
+        if (beacon.name == null) {
+            beaconName.setText("Anonymous");
+        }else {
+            beaconName.setText(beacon.name);
+        }
+
 
         TextView beaconMac = convertView.findViewById(R.id.beacon_mac);
         beaconMac.setText(beacon.macAddress);
