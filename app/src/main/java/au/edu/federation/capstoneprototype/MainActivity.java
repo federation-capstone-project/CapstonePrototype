@@ -29,7 +29,7 @@ import java.util.List;
 public class MainActivity extends AppCompatActivity {
     BluetoothAdapter btAdapter;
     public List<Beacon> list_beacons = new ArrayList<>();
-    public List<Beacon> known_beacons = new ArrayList<>();
+    public List<Class> classes = new ArrayList<>();
     ListView saved;
     BeaconAdapter adapter;
     boolean searching = false;
@@ -54,11 +54,11 @@ public class MainActivity extends AppCompatActivity {
         saved.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                Beacon current_class = (Beacon) saved.getItemAtPosition(i);
+                Beacon selected = (Beacon) saved.getItemAtPosition(i);
+                Class current_class = classes.get(selected.getID());
                 new AlertDialog.Builder(MainActivity.this)
                         .setTitle("Check into class!")
-                        .setMessage(current_class.name)
-
+                        .setMessage(getString(R.string.class_format_full, current_class.getName(), current_class.getTeacher(), current_class.getTime(), current_class.getDay()))
                         // Specifying a listener allows you to take an action before dismissing the dialog.
                         // The dialog is automatically dismissed when a dialog button is clicked.
                         .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
@@ -85,7 +85,8 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
         });
-        known_beacons.add(new Beacon("TRANSGENDER HISTORY (MR HALL)", "FE:90:6F:57:2A:FB", "1559193781"));
+        classes.add(new Class(0,"Transgender History", "Mr Hall","09:00", "Monday", "Lecture Room 70", "FE:90:6F:57:2A:FB"));
+        classes.add(new Class(1,"Life of the Flex (of muscles)", "Mr Copsey","09:00", "Tuesday", "Lecture Room 70", "C0:28:8D:4E:27:B2"));
     }
 
     @Override
@@ -99,9 +100,9 @@ public class MainActivity extends AppCompatActivity {
             String action = intent.getAction();
             if (BluetoothDevice.ACTION_FOUND.equals(action)) {
                 BluetoothDevice device = intent.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE);
-                for (Beacon known : known_beacons){
+                for (Class known : classes){
                     if(known.getMacAddress().equals(device.getAddress())){
-                        list_beacons.add(new Beacon(known.getName(), known.getMacAddress(), String.valueOf(System.currentTimeMillis() / 1000L)));
+                        list_beacons.add(new Beacon(known.getClassId(),known.getName(), known.getMacAddress(), String.valueOf(System.currentTimeMillis() / 1000L)));
                     }
                 }
 
