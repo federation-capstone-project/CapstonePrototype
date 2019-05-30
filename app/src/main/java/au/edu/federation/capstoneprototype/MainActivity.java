@@ -8,20 +8,15 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.content.pm.PackageManager;
-import android.os.Build;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.ActivityCompat;
-import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
-import android.widget.Toast;
-import android.Manifest;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -29,7 +24,7 @@ import java.util.List;
 public class MainActivity extends AppCompatActivity {
     BluetoothAdapter btAdapter;
     public List<Beacon> list_beacons = new ArrayList<>();
-    public List<Class> classes = new ArrayList<>();
+    public List<Class> list_classes = new ArrayList<>();
     ListView saved;
     BeaconAdapter adapter;
     boolean searching = false;
@@ -40,7 +35,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         btAdapter = BluetoothAdapter.getDefaultAdapter();
         if (btAdapter == null) {
-            // Device does not support Bluetooth
+            Log.d(getPackageName(), "Device does not feature bluetooth");
         }
         if (!btAdapter.isEnabled()) {
             Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
@@ -55,7 +50,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                 Beacon selected = (Beacon) saved.getItemAtPosition(i);
-                Class current_class = classes.get(selected.getID());
+                Class current_class = list_classes.get(selected.getID());
                 new AlertDialog.Builder(MainActivity.this)
                         .setTitle("Check into class!")
                         .setMessage(getString(R.string.class_format_full, current_class.getName(), current_class.getTeacher(), current_class.getTime(), current_class.getDay()))
@@ -85,8 +80,8 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
         });
-        classes.add(new Class(0,"Transgender History", "Mr Hall","09:00", "Monday", "Lecture Room 70", "FE:90:6F:57:2A:FB"));
-        classes.add(new Class(1,"Life of the Flex (of muscles)", "Mr Copsey","09:00", "Tuesday", "Lecture Room 70", "C0:28:8D:4E:27:B2"));
+        list_classes.add(new Class(0,"Transgender History", "Mr Hall","09:00", "Monday", "Lecture Room 70", "FE:90:6F:57:2A:FB"));
+        list_classes.add(new Class(1,"Life of the Flex (of muscles)", "Mr Copsey","09:00", "Tuesday", "Lecture Room 70", "C0:28:8D:4E:27:B2"));
     }
 
     @Override
@@ -100,7 +95,7 @@ public class MainActivity extends AppCompatActivity {
             String action = intent.getAction();
             if (BluetoothDevice.ACTION_FOUND.equals(action)) {
                 BluetoothDevice device = intent.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE);
-                for (Class known : classes){
+                for (Class known : list_classes){
                     if(known.getMacAddress().equals(device.getAddress())){
                         list_beacons.add(new Beacon(known.getClassId(),known.getName(), known.getMacAddress(), String.valueOf(System.currentTimeMillis() / 1000L)));
                     }
