@@ -16,6 +16,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.ImageView;
 import android.widget.ListView;
 
 import java.util.ArrayList;
@@ -23,10 +24,10 @@ import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
     BluetoothAdapter btAdapter;
-    public List<Beacon> list_beacons = new ArrayList<>();
+    public List<Class> list_known = new ArrayList<>();
     public List<Class> list_classes = new ArrayList<>();
     ListView saved;
-    BeaconAdapter adapter;
+    ClassAdapter adapter;
     boolean searching = false;
     int REQUEST_ENABLE_BT = 0;
     @Override
@@ -43,29 +44,52 @@ public class MainActivity extends AppCompatActivity {
         }
         IntentFilter filter = new IntentFilter(BluetoothDevice.ACTION_FOUND);
         registerReceiver(mReceiver, filter);
-        adapter = new BeaconAdapter(this, list_beacons, false);
+        adapter = new ClassAdapter(this, list_classes, false);
         saved = findViewById(R.id.saved_dynamic);
         saved.setAdapter(adapter);
         saved.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                Beacon selected = (Beacon) saved.getItemAtPosition(i);
-                Class current_class = list_classes.get(selected.getID());
-                new AlertDialog.Builder(MainActivity.this)
-                        .setTitle("Check into class!")
-                        .setMessage(getString(R.string.class_format_full, current_class.getName(), current_class.getTeacher(), current_class.getTime(), current_class.getDay()))
-                        // Specifying a listener allows you to take an action before dismissing the dialog.
-                        // The dialog is automatically dismissed when a dialog button is clicked.
-                        .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int which) {
-                                // Continue with delete operation
-                            }
-                        })
+                Class selected = (Class) saved.getItemAtPosition(i);
+                final Class current_class = list_classes.get(selected.getClassId());
+                if (current_class.isPresent()) {
+                    new AlertDialog.Builder(MainActivity.this)
+                            .setTitle("Check out of class!")
+                            .setMessage(getString(R.string.class_format_full, current_class.getName(), current_class.getTeacher(), current_class.getTime(), current_class.getDay()))
+                            // Specifying a listener allows you to take an action before dismissing the dialog.
+                            // The dialog is automatically dismissed when a dialog button is clicked.
+                            .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int which) {
+                                    ImageView classStar = findViewById(R.id.class_star);
+                                    classStar.setVisibility(View.INVISIBLE);
+                                    current_class.setPresent(false);
+                                }
+                            })
 
-                        // A null listener allows the button to dismiss the dialog and take no further action.
-                        .setNegativeButton(android.R.string.no, null)
-                        .setIcon(android.R.drawable.ic_dialog_alert)
-                        .show();
+                            // A null listener allows the button to dismiss the dialog and take no further action.
+                            .setNegativeButton(android.R.string.no, null)
+                            .setIcon(android.R.drawable.ic_dialog_alert)
+                            .show();
+                } else {
+                    new AlertDialog.Builder(MainActivity.this)
+                            .setTitle("Check into class!")
+                            .setMessage(getString(R.string.class_format_full, current_class.getName(), current_class.getTeacher(), current_class.getTime(), current_class.getDay()))
+                            // Specifying a listener allows you to take an action before dismissing the dialog.
+                            // The dialog is automatically dismissed when a dialog button is clicked.
+                            .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int which) {
+                                    ImageView classStar = findViewById(R.id.class_star);
+                                    classStar.setVisibility(View.VISIBLE);
+                                    current_class.setPresent(true);
+                                }
+                            })
+
+                            // A null listener allows the button to dismiss the dialog and take no further action.
+                            .setNegativeButton(android.R.string.no, null)
+                            .setIcon(android.R.drawable.ic_dialog_alert)
+                            .show();
+
+                }
             }
         });
         FloatingActionButton addButton = findViewById(R.id.add_beacon);
@@ -80,8 +104,8 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
         });
-        list_classes.add(new Class(0,"Transgender History", "Mr Hall","09:00", "Monday", "Lecture Room 70", "FE:90:6F:57:2A:FB"));
-        list_classes.add(new Class(1,"Life of the Flex (of muscles)", "Mr Copsey","09:00", "Tuesday", "Lecture Room 70", "C0:28:8D:4E:27:B2"));
+        list_known.add(new Class(0,"Medical History", "Mr Hall","09:00", "Monday", "Lecture Room 70", "FE:90:6F:57:2A:FB", false));
+        list_known.add(new Class(1,"Life of the Flex (of muscles)", "Mr Copsey","09:00", "Tuesday", "Lecture Room 70", "C0:28:8D:4E:27:B2", false));
     }
 
     @Override
@@ -95,9 +119,9 @@ public class MainActivity extends AppCompatActivity {
             String action = intent.getAction();
             if (BluetoothDevice.ACTION_FOUND.equals(action)) {
                 BluetoothDevice device = intent.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE);
-                for (Class known : list_classes){
+                for (Class known : list_known){
                     if(known.getMacAddress().equals(device.getAddress())){
-                        list_beacons.add(new Beacon(known.getClassId(),known.getName(), known.getMacAddress(), String.valueOf(System.currentTimeMillis() / 1000L)));
+                        list_classes.add(known);
                     }
                 }
 
