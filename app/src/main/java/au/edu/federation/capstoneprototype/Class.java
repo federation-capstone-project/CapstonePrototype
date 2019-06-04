@@ -2,7 +2,7 @@ package au.edu.federation.capstoneprototype;
 
 public class Class {
 
-    public Class(int id, String name, String teacher, String time, String day, String room, String macAddress, boolean present) {
+    Class(int id, String name, String teacher, String time, String day, String room, String macAddress, boolean present) {
         this.id = id;
         this.name = name;
         this.teacher = teacher;
@@ -13,7 +13,7 @@ public class Class {
         this.present = present;
     }
 
-    public int getClassId() {
+    int getClassId() {
         return id;
     }
 
@@ -21,7 +21,7 @@ public class Class {
         this.id = id;
     }
 
-    public String getName() {
+    String getName() {
         return name;
     }
 
@@ -29,7 +29,7 @@ public class Class {
         this.name = name;
     }
 
-    public String getTeacher() {
+    String getTeacher() {
         return teacher;
     }
 
@@ -37,7 +37,7 @@ public class Class {
         this.teacher = teacher;
     }
 
-    public String getTime() {
+    String getTime() {
         return time;
     }
 
@@ -45,7 +45,7 @@ public class Class {
         this.time = time;
     }
 
-    public String getDay() {
+    String getDay() {
         return day;
     }
 
@@ -61,7 +61,7 @@ public class Class {
         this.room = room;
     }
 
-    public String getMacAddress() {
+    String getMacAddress() {
         return macAddress;
     }
 
@@ -69,22 +69,22 @@ public class Class {
         this.macAddress = macAddress;
     }
 
-    public int id;
-    public String name;
-    public String teacher;
-    public String time;
-    public String day;
-    public String room;
-    public String macAddress;
+    private int id;
+    private String name;
+    private String teacher;
+    private String time;
+    private String day;
+    private String room;
+    private String macAddress;
 
-    public boolean isPresent() {
+    boolean isPresent() {
         return present;
     }
 
-    public void setPresent(boolean present) {
+    void setPresent(boolean present) {
         this.present = present;
     }
 
-    public boolean present;
+    private boolean present;
 
 }

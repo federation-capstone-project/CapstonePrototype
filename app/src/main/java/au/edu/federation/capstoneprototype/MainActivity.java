@@ -44,7 +44,7 @@ public class MainActivity extends AppCompatActivity {
         }
         IntentFilter filter = new IntentFilter(BluetoothDevice.ACTION_FOUND);
         registerReceiver(mReceiver, filter);
-        adapter = new ClassAdapter(this, list_classes, false);
+        adapter = new ClassAdapter(this, list_classes);
         saved = findViewById(R.id.saved_dynamic);
         saved.setAdapter(adapter);
         saved.setOnItemClickListener(new AdapterView.OnItemClickListener() {

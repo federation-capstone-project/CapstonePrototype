@@ -15,14 +15,13 @@ import android.widget.TextView;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ClassAdapter extends ArrayAdapter<Class> {
-    List<Class> list;
-    boolean showSave;
 
-    public ClassAdapter(Context context, List<Class> list, boolean saveButton) {
+public class ClassAdapter extends ArrayAdapter<Class> {
+    private List<Class> list;
+
+    ClassAdapter(Context context, List<Class> list) {
         super (context, R.layout.beacon, list);
         this.list = list;
-        this.showSave = saveButton;
     }
 
     public View getView (final int position, View convertView, ViewGroup parent) {
@@ -33,13 +32,13 @@ public class ClassAdapter extends ArrayAdapter<Class> {
         final Class beacon = list.get(position);
 
         TextView beaconName = convertView.findViewById(R.id.class_name);
-        if (beacon.name == null) {
-            beaconName.setText("Anonymous");
+        if (beacon.getName() == null) {
+            beaconName.setText("");
         }else {
-            beaconName.setText(beacon.name);
+            beaconName.setText(beacon.getName());
         }
         TextView beaconMac = convertView.findViewById(R.id.class_description);
-        beaconMac.setText(String.format("%s %s (%s)",beacon.getTeacher(), beacon.getTime(), beacon.getDay()));
+        beaconMac.setText(getContext().getString(R.string.class_format_description,beacon.getTeacher(), beacon.getDay(), beacon.getTime()));
         return convertView;
     }
 }
