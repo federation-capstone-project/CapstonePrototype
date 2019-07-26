@@ -42,7 +42,10 @@ public class MainActivity extends AppCompatActivity {
             Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
             startActivityForResult(enableBtIntent, REQUEST_ENABLE_BT);
         }
-        IntentFilter filter = new IntentFilter(BluetoothDevice.ACTION_FOUND);
+        IntentFilter filter = new IntentFilter();
+        filter.addAction(BluetoothDevice.ACTION_FOUND);
+        filter.addAction(BluetoothAdapter.ACTION_DISCOVERY_STARTED);
+        filter.addAction(BluetoothAdapter.ACTION_DISCOVERY_FINISHED);
         registerReceiver(mReceiver, filter);
         adapter = new ClassAdapter(this, list_classes);
         saved = findViewById(R.id.saved_dynamic);
@@ -105,13 +108,22 @@ public class MainActivity extends AppCompatActivity {
             }
         });
         list_known.add(new Class(0,"Medical History", "Mr Hall","09:00", "Monday", "Lecture Room 70", "FE:90:6F:57:2A:FB", false));
-        list_known.add(new Class(1,"Life of the Flex (of muscles)", "Mr Copsey","09:00", "Tuesday", "Lecture Room 70", "C0:28:8D:4E:27:B2", false));
+        list_known.add(new Class(1,"Life of the Flex (of muscles)", "Mr Copsey","09:00", "Tuesday", "Lecture Room 70", "C9:28:8D:4E:27:B2", false));
+    }
+
+    @Override
+    protected void onResume(){
+        super.onResume();
+        btAdapter.startDiscovery();
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
         unregisterReceiver(mReceiver);
+        if(searching){
+            btAdapter.cancelDiscovery();
+        }
     }
 
     private final BroadcastReceiver mReceiver = new BroadcastReceiver() {
@@ -119,14 +131,21 @@ public class MainActivity extends AppCompatActivity {
             String action = intent.getAction();
             if (BluetoothDevice.ACTION_FOUND.equals(action)) {
                 BluetoothDevice device = intent.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE);
-                for (Class known : list_known){
-                    if(known.getMacAddress().equals(device.getAddress())){
+                for (Class known : list_known) {
+                    if (known.getMacAddress().equals(device.getAddress())) {
                         list_classes.add(known);
                     }
                 }
 
                 Log.i("BT", device.getName() + "\n" + device.getAddress());
                 adapter.notifyDataSetChanged();
+            } else if (BluetoothAdapter.ACTION_DISCOVERY_STARTED.equals(action)) {
+                Log.d(getPackageName(), "Discovery Started");
+                searching = true;
+            }
+            else if (BluetoothAdapter.ACTION_DISCOVERY_FINISHED.equals(action)) {
+                Log.d(getPackageName(), "Discovery Finished");
+                searching = false;
             }
         }
     };
