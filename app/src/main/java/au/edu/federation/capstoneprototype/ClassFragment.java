@@ -8,6 +8,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
@@ -19,28 +20,31 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class ClassFragment extends Fragment {
     BluetoothAdapter btAdapter;
+    ClassAdapter adapter;
     public List<Class> list_known = new ArrayList<>();
     public List<Class> list_classes = new ArrayList<>();
     ListView saved;
-    ClassAdapter adapter;
     boolean searching = false;
     int REQUEST_ENABLE_BT = 0;
-
+    SharedPreferences prefs;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        prefs = getActivity().getSharedPreferences("prefs",Context.MODE_PRIVATE);
         return inflater.inflate(R.layout.fragment_class, container, false);
     }
 
     @Override
     public void onResume() {
         super.onResume();
-        btAdapter.startDiscovery();
+        deviceDiscovery();
+
     }
 
     @Override
@@ -53,7 +57,7 @@ public class ClassFragment extends Fragment {
     }
 
     @Override
-    public void onViewCreated(View view, Bundle savedInstanceState) {
+    public void onViewCreated(final View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         //you can set the title for your toolbar here for different fragments different titles
         getActivity().setTitle("Classes");
@@ -82,8 +86,6 @@ public class ClassFragment extends Fragment {
                     new AlertDialog.Builder(view.getContext())
                             .setTitle("Check out of class!")
                             .setMessage(getString(R.string.class_format_full, current_class.getName(), current_class.getTeacher(), current_class.getTime(), current_class.getDay()))
-                            // Specifying a listener allows you to take an action before dismissing the dialog.
-                            // The dialog is automatically dismissed when a dialog button is clicked.
                             .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
                                 public void onClick(DialogInterface dialog, int which) {
                                     ImageView classStar = getView().findViewById(R.id.class_star);
@@ -100,8 +102,6 @@ public class ClassFragment extends Fragment {
                     new AlertDialog.Builder(view.getContext())
                             .setTitle("Check into class!")
                             .setMessage(getString(R.string.class_format_full, current_class.getName(), current_class.getTeacher(), current_class.getTime(), current_class.getDay()))
-                            // Specifying a listener allows you to take an action before dismissing the dialog.
-                            // The dialog is automatically dismissed when a dialog button is clicked.
                             .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
                                 public void onClick(DialogInterface dialog, int which) {
                                     ImageView classStar = getView().findViewById(R.id.class_star);
@@ -122,16 +122,23 @@ public class ClassFragment extends Fragment {
         addButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (!searching) {
-                    requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION}, 1001);
-                    Log.d(getActivity().getPackageName(), "Searching...");
-                    btAdapter.startDiscovery();
-                    searching = true;
-                }
+                deviceDiscovery();
             }
         });
         list_known.add(new Class(0, "Medical History", "Mr Hall", "09:00", "Monday", "Lecture Room 70", "FE:90:6F:57:2A:FB", false));
         list_known.add(new Class(1, "Life of the Flex (of muscles)", "Mr Copsey", "09:00", "Tuesday", "Lecture Room 70", "C0:28:8D:4E:27:B2", false));
+
+    }
+
+    public void deviceDiscovery(){
+        if(prefs.getBoolean("bluetooth_auto", true)){
+            if (!searching) {
+                requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION}, 1001);
+                Log.d(getActivity().getPackageName(), "Searching...");
+                btAdapter.startDiscovery();
+                searching = true;
+            }
+        }
 
     }
 
@@ -150,9 +157,11 @@ public class ClassFragment extends Fragment {
                 adapter.notifyDataSetChanged();
             } else if (BluetoothAdapter.ACTION_DISCOVERY_STARTED.equals(action)) {
                 Log.d(getActivity().getPackageName(), "Discovery Started");
+                Toast.makeText(getContext(), "Searching...", Toast.LENGTH_SHORT).show();
                 searching = true;
             } else if (BluetoothAdapter.ACTION_DISCOVERY_FINISHED.equals(action)) {
                 Log.d(getActivity().getPackageName(), "Discovery Finished");
+                Toast.makeText(getContext(), "Searching Finished", Toast.LENGTH_SHORT).show();
                 searching = false;
             }
         }
