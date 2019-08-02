@@ -19,7 +19,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:labelFor="@+id/et_student_id"
-                android:text="Student ID:" />
+                android:text="@string/student_id" />
 
             <EditText
                 android:id="@+id/et_student_id"
@@ -33,13 +33,13 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:labelFor="@+id/cb_bluetooth_auto"
-                android:text="Blueooth Setting's" />
+                android:text="@string/blueooth_setting_s" />
 
             <CheckBox
                 android:id="@+id/cb_bluetooth_auto"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Bluetooth Auto Scan" />
+                android:text="@string/bluetooth_auto_scan" />
         </LinearLayout>
     </ScrollView>
 </FrameLayout>

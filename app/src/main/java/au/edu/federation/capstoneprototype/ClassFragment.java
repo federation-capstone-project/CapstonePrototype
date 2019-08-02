@@ -18,6 +18,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.Toast;
@@ -122,7 +124,30 @@ public class ClassFragment extends Fragment {
         addButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                deviceDiscovery();
+                final AlertDialog dialogBuilder = new AlertDialog.Builder(getContext()).create();
+                LayoutInflater inflater = getActivity().getLayoutInflater();
+                View dialogView = inflater.inflate(R.layout.dialog_class_add, null);
+
+                final EditText editText = (EditText) dialogView.findViewById(R.id.edt_comment);
+                Button button1 = (Button) dialogView.findViewById(R.id.buttonSubmit);
+                Button button2 = (Button) dialogView.findViewById(R.id.buttonCancel);
+
+                button2.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        dialogBuilder.dismiss();
+                    }
+                });
+                button1.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        // DO SOMETHINGS
+                        dialogBuilder.dismiss();
+                    }
+                });
+
+                dialogBuilder.setView(dialogView);
+                dialogBuilder.show();
             }
         });
         list_known.add(new Class(0, "Medical History", "Mr Hall", "09:00", "Monday", "Lecture Room 70", "FE:90:6F:57:2A:FB", false));
