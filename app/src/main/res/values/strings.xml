@@ -12,10 +12,14 @@
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="class_check_in">Class Check-in</string>
-    <string name="student_class">Class</string>
+    <string name="student_class">Class ID</string>
+    <string name="student_class_id">Student ID</string>
     <string name="submit">Submit</string>
     <string name="cancel">Cancel</string>
     <string name="student_id">Student ID:</string>
     <string name="blueooth_setting_s">Blueooth Setting\'s</string>
     <string name="bluetooth_auto_scan">Bluetooth Auto Scan</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>
