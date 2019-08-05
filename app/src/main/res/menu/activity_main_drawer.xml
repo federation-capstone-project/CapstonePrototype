@@ -9,6 +9,14 @@
                 android:id="@+id/nav_class"
                 android:icon="@drawable/ic_menu_share"
                 android:title="Classes" />
+            <item
+                android:id="@+id/nav_schedule"
+                android:icon="@drawable/ic_menu_share"
+                android:title="Schedule" />
+            <item
+                android:id="@+id/nav_history"
+                android:icon="@drawable/ic_menu_share"
+                android:title="History" />
         </menu>
     </item>
     <item android:title="Menu 2">
