@@ -147,7 +147,7 @@ public class ClassFragment extends Fragment {
                                     ImageView classStar = getView().findViewById(R.id.class_star);
                                     classStar.setVisibility(View.VISIBLE);
                                     current_class.setPresent(true);
-                                    postRequest(prefs.getString("student_id", "69"),String.valueOf(current_class.getClassId()), true, false);
+                                    postRequest(prefs.getString("student_id", "69"),"3", true, false);
                                     Log.d(getActivity().getPackageName(), "Passed on to postRequest");
                                 }
                             })
