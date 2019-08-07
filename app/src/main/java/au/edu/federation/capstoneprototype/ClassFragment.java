@@ -192,8 +192,8 @@ public class ClassFragment extends Fragment {
                 dialogBuilder.show();
             }
         });
-        list_known.add(new Class(0, "Medical History", "Mr Hall", "09:00", "Monday", "Lecture Room 70", "FE:90:6F:57:2A:FB", false));
-        list_known.add(new Class(1, "Life of the Flex (of muscles)", "Mr Copsey", "09:00", "Tuesday", "Lecture Room 70", "C0:28:8D:4E:27:B2", false));
+        list_known.add(new Class(0, "MED1","Medical History", "Mr Hall", "09:00", "Monday", "Lecture Room 70", "FE:90:6F:57:2A:FB", false));
+        list_known.add(new Class(1, "MED2","Life of the Flex (of muscles)", "Mr Copsey", "09:00", "Tuesday", "Lecture Room 70", "C0:28:8D:4E:27:B2", false));
 
     }
 

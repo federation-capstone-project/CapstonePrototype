@@ -3,6 +3,7 @@ package au.edu.federation.capstoneprototype;
 public class Class {
 
     private int id;
+    private String code;
     private String name;
     private String teacher;
     private String time;
@@ -11,8 +12,9 @@ public class Class {
     private String macAddress;
     private boolean present;
 
-    Class(int id, String name, String teacher, String time, String day, String room, String macAddress, boolean present) {
+    Class(int id, String code, String name,String teacher, String time, String day, String room, String macAddress, boolean present) {
         this.id = id;
+        this.code = code;
         this.name = name;
         this.teacher = teacher;
         this.time = time;
