@@ -5,6 +5,7 @@ import android.content.Context;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -31,6 +32,9 @@ public LocalDateTime s;
     CalendarList adapter;
     CalItem newCal;
 
+
+    public ArrayList<CalItem> sss;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState){
         View view = inflater.inflate(R.layout.fragment_class_schedule, container, false);
@@ -39,6 +43,19 @@ public LocalDateTime s;
         ListView a = view.findViewById(R.id.lol);
         a.setAdapter(adapter);
         newCal = null;
+        sss = new ArrayList<CalItem>();
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
+
+            CalItem qq = new CalItem("Bone Removal 101", "N. Hall", "N534L", "", LocalDateTime.now());
+            sss.add(qq);
+            CalItem ww = new CalItem("Bone Removal 101", "N. Hall", "N534L", "", LocalDateTime.now().plusDays(1));
+            sss.add(ww);
+
+            CalItem ee = new CalItem("Bone Removal 101", "N. Hall", "N534L", "", LocalDateTime.now());
+            sss.add(ee);
+            CalItem rr = new CalItem("Bone Removal 101", "N. Hall", "N534L", "", LocalDateTime.now().plusDays(2));
+            sss.add(rr);
+        }
 
       /*  if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             newCal = new CalItem("Bone Removal 101", "N. Hall", "N-298L", "9:30 - 14/08/2019", LocalDateTime.now());
@@ -72,32 +89,17 @@ public LocalDateTime s;
                         dateview.setText(dayOfMonth + "/" + (month + 1) + "/" + year);
                         adapter.clear();
                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                           for (int i = 0; i < sss.size(); i++) {
+
+                               if (sss.get(i).ClassDateTime.getDayOfMonth() == dayOfMonth)
+                               {
+                                   adapter.add(sss.get(i));
+                               }
+                           }
                            if (dayOfMonth == LocalDateTime.now().getDayOfMonth() )
                            {
-                               if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                                   newCal = new CalItem("Bone Removal 101", "N. Hall","N534L", "",LocalDateTime.now());
-                                   adapter.add(newCal);
-                                   newCal = new CalItem("Bone Removal 101", "N. Hall","N534L", "",LocalDateTime.now());
-                                   adapter.add(newCal);
-                                   newCal = new CalItem("Bone Removal 101", "N. Hall","N534L", "",LocalDateTime.now());
-                                   adapter.add(newCal);
-                                   newCal = new CalItem("Bone Removal 101", "N. Hall","N534L", "",LocalDateTime.now());
-                                   adapter.add(newCal);
-                                   newCal = new CalItem("Bone Removal 101", "N. Hall","N534L", "",LocalDateTime.now());
-                                   adapter.add(newCal);
-                                   newCal = new CalItem("Bone Removal 101", "N. Hall","N534L", "",LocalDateTime.now());
-                                   adapter.add(newCal);
 
 
-
-
-                                   newCal = new CalItem("Bone Removal 101", "N. Hall","N534L", "",LocalDateTime.now().plusDays(1));
-                                   adapter.add(newCal);
-                                   newCal = new CalItem("Bone Removal 101", "N. Hall","N534L", "",LocalDateTime.now().plusDays(2));
-                                   adapter.add(newCal);
-                                   newCal = new CalItem("Bone Removal 101", "N. Hall","N534L", "",LocalDateTime.now().plusDays(3));
-                                   adapter.add(newCal);
-                               }
                            }
                        }
 
