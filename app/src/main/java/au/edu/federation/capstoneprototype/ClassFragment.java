@@ -47,30 +47,6 @@ public class ClassFragment extends Fragment {
     ClassAdapter adapter;
     ListView saved;
     boolean searching = false;
-    private final BroadcastReceiver mReceiver = new BroadcastReceiver() {
-        public void onReceive(Context context, Intent intent) {
-            String action = intent.getAction();
-            if (BluetoothDevice.ACTION_FOUND.equals(action)) {
-                BluetoothDevice device = intent.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE);
-                for (Class known : list_known) {
-                    if (known.getMacAddress().equals(device.getAddress())) {
-                        list_classes.add(known);
-                    }
-                }
-
-                Log.i("BT", device.getName() + "\n" + device.getAddress());
-                adapter.notifyDataSetChanged();
-            } else if (BluetoothAdapter.ACTION_DISCOVERY_STARTED.equals(action)) {
-                Log.d(getActivity().getPackageName(), "Discovery Started");
-                Toast.makeText(getContext(), "Searching...", Toast.LENGTH_SHORT).show();
-                searching = true;
-            } else if (BluetoothAdapter.ACTION_DISCOVERY_FINISHED.equals(action)) {
-                Log.d(getActivity().getPackageName(), "Discovery Finished");
-                Toast.makeText(getContext(), "Searching Finished", Toast.LENGTH_SHORT).show();
-                searching = false;
-            }
-        }
-    };
     int REQUEST_ENABLE_BT = 0;
     SharedPreferences prefs;
 
@@ -197,6 +173,11 @@ public class ClassFragment extends Fragment {
 
     }
 
+    /**
+     *  Initiates the device discover process
+     *  Last's for 10-15 seconds
+     *  Any found devices are passed to @mReceiver
+     */
     public void deviceDiscovery() {
         if (prefs.getBoolean("bluetooth_auto", true)) {
             if (!searching) {
@@ -208,14 +189,48 @@ public class ClassFragment extends Fragment {
         }
 
     }
+    /**
+     * Handles the ACTION_FOUND from the Device Discovery process
+     *  TODO Compare to student schedule
+     */
+    private final BroadcastReceiver mReceiver = new BroadcastReceiver() {
+        public void onReceive(Context context, Intent intent) {
+            String action = intent.getAction();
+            if (BluetoothDevice.ACTION_FOUND.equals(action)) {
+                BluetoothDevice device = intent.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE);
+                for (Class known : list_known) {
+                    if (known.getMacAddress().equals(device.getAddress())) {
+                        list_classes.add(known);
+                    }
+                }
+
+                Log.i("BT", device.getName() + "\n" + device.getAddress());
+                adapter.notifyDataSetChanged();
+            } else if (BluetoothAdapter.ACTION_DISCOVERY_STARTED.equals(action)) {
+                Log.d(getActivity().getPackageName(), "Discovery Started");
+                Toast.makeText(getContext(), "Searching...", Toast.LENGTH_SHORT).show();
+                searching = true;
+            } else if (BluetoothAdapter.ACTION_DISCOVERY_FINISHED.equals(action)) {
+                Log.d(getActivity().getPackageName(), "Discovery Finished");
+                Toast.makeText(getContext(), "Searching Finished", Toast.LENGTH_SHORT).show();
+                searching = false;
+            }
+        }
+    };
+
+    /**
+     * Handles the communication with the Django framework
+     * @param student the student's id
+     * @param event the class id
+     * @param attended whether the student attended
+     * @param manual whether the student attendance was manually added
+     * TODO OnFailure saves the event to the local database
+     */
 
         public void postRequest(String student,  String event,  Boolean attended,  Boolean manual) {
-
             MediaType MEDIA_TYPE = MediaType.parse("application/json");
             String url = "https://capstone.blny.me/studentevents/";
-
             OkHttpClient client = new OkHttpClient();
-
             JSONObject postdata = new JSONObject();
             try {
                 postdata.put("student", student);
@@ -228,7 +243,6 @@ public class ClassFragment extends Fragment {
             }
 
             RequestBody body = RequestBody.create(MEDIA_TYPE, postdata.toString());
-
             Request request = new Request.Builder()
                     .url(url)
                     .post(body)
