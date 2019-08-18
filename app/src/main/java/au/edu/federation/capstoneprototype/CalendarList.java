@@ -29,9 +29,9 @@ public class CalendarList extends ArrayAdapter<CalItem> {
            convertView = LayoutInflater.from(getContext()).inflate(R.layout.calendar_array,parent,false);
        }
        //TextView tvName = (TextView) convertView.findViewById(R.id.txt);
-       Button tvName = (Button) convertView.findViewById(R.id.btnitem);
+       Button tvName = convertView.findViewById(R.id.btnitem);
 
-            tvName.setText(calItem.ClassName + ", " + calItem.ClassClin + "\n Room: " + calItem.ClassLocation + " "+"\n" + calItem.ClassTime+ "\n"+calItem.ClassDateTime.toString());
+            tvName.setText(calItem.ClassName + ", " + calItem.ClassClin + "\n Room: " + calItem.ClassLocation + " "+"\n" + calItem.ClassTime);
 
         return convertView;
    }

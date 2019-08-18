@@ -38,7 +38,7 @@ public class ClassAdapter extends ArrayAdapter<Class> {
             beaconName.setText(beacon.getName());
         }
         TextView beaconMac = convertView.findViewById(R.id.class_description);
-        beaconMac.setText(getContext().getString(R.string.class_format_description,beacon.getTeacher(), beacon.getDay(), beacon.getTime()));
+        beaconMac.setText(getContext().getString(R.string.class_format_description,beacon.getTeacherName(), beacon.getName(), beacon.getLocation()));
         return convertView;
     }
 }

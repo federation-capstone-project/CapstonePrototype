@@ -1,38 +1,75 @@
 package au.edu.federation.capstoneprototype;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+
 public class Class {
 
     private int id;
     private String code;
     private String name;
-    private String teacher;
-    private String time;
-    private String day;
-    private String room;
-    private String macAddress;
-    private boolean present;
-
-    Class(int id, String code, String name,String teacher, String time, String day, String room, String macAddress, boolean present) {
+    private int teacher_id;
+    private String teacher_name;
+    private String location;
+    private String mac;
+    private String date; // (yyyy-MM-dd HH:mm:ss)
+    private String start; //
+    private String finish; //
+    private String present;
+    public Class(){   }
+    public Class(int id, String code, String name, int teacher_id, String teacher_name, String location, String mac, String date, String start, String finish, String present) {
         this.id = id;
         this.code = code;
         this.name = name;
-        this.teacher = teacher;
-        this.time = time;
-        this.day = day;
-        this.room = room;
-        this.macAddress = macAddress;
+        this.teacher_id = teacher_id;
+        this.teacher_name = teacher_name;
+        this.location = location;
+        this.mac = mac;
+        this.date = date;
+        this.start = start;
+        this.finish = finish;
         this.present = present;
     }
 
-    int getClassId() {
+    public Class( String code, String name, int teacher_id, String teacher_name, String location, String mac, String date, String start, String finish, String present) {
+        this.code = code;
+        this.name = name;
+        this.teacher_id = teacher_id;
+        this.teacher_name = teacher_name;
+        this.location = location;
+        this.mac = mac;
+        this.date = date;
+        this.start = start;
+        this.finish = finish;
+        this.present = present;
+    }
+
+    public String getDate() {
+        return date;
+    }
+
+    public void setDate(String date) {
+        this.date = date;
+    }
+
+    public int getId() {
         return id;
     }
 
-    public void setClassId(int id) {
+    public void setId(int id) {
         this.id = id;
     }
 
-    String getName() {
+    public String getCode() {
+        return code;
+    }
+
+    public void setCode(String code) {
+        this.code = code;
+    }
+
+    public String getName() {
         return name;
     }
 
@@ -40,52 +77,62 @@ public class Class {
         this.name = name;
     }
 
-    String getTeacher() {
-        return teacher;
+    public int getTeacherID() {
+        return teacher_id;
     }
 
-    public void setTeacher(String teacher) {
-        this.teacher = teacher;
+    public void setTeacherID(int teacher_id) {
+        this.teacher_id = teacher_id;
     }
 
-    String getTime() {
-        return time;
+    public void setTeacherName(String teacher_name) {
+        this.teacher_name = teacher_name;
     }
 
-    public void setTime(String time) {
-        this.time = time;
+    public String getTeacherName() {
+        return teacher_name;
     }
 
-    String getDay() {
-        return day;
+    public String getLocation() {
+        return location;
     }
 
-    public void setDay(String day) {
-        this.day = day;
+    public void setLocation(String location) {
+        this.location = location;
     }
 
-    public String getRoom() {
-        return room;
+    public String getMac() {
+        return mac;
     }
 
-    public void setRoom(String room) {
-        this.room = room;
+    public void setMac(String mac) {
+        this.mac = mac;
     }
 
-    String getMacAddress() {
-        return macAddress;
+    public String getStart() {
+        return start;
     }
 
-    public void setMacAddress(String macAddress) {
-        this.macAddress = macAddress;
+    public void setStart(String start) {
+        this.start = start;
     }
 
-    boolean isPresent() {
+    public String getFinish() {
+        return finish;
+    }
+
+    public void setFinish(String finish) {
+        this.finish = finish;
+    }
+
+
+    public String isPresent() {
         return present;
     }
 
-    void setPresent(boolean present) {
+    public void setPresent(String present) {
         this.present = present;
     }
+
 
 }

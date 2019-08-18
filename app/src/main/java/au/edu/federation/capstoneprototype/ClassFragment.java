@@ -78,12 +78,14 @@ public class ClassFragment extends Fragment {
         //you can set the title for your toolbar here for different fragments different titles
         getActivity().setTitle("Classes");
         btAdapter = BluetoothAdapter.getDefaultAdapter();
-        if (btAdapter == null) {
+        final DatabaseHandler db = new DatabaseHandler(getContext());
+        if (btAdapter != null) {
+            if (!btAdapter.isEnabled()) {
+                Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
+                startActivityForResult(enableBtIntent, REQUEST_ENABLE_BT);
+            }
+        } else {
             Log.d(getActivity().getPackageName(), "Device does not feature bluetooth");
-        }
-        if (!btAdapter.isEnabled()) {
-            Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
-            startActivityForResult(enableBtIntent, REQUEST_ENABLE_BT);
         }
         IntentFilter filter = new IntentFilter();
         filter.addAction(BluetoothDevice.ACTION_FOUND);
@@ -97,16 +99,16 @@ public class ClassFragment extends Fragment {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                 Class selected = (Class) saved.getItemAtPosition(i);
-                final Class current_class = list_classes.get(selected.getClassId());
-                if (current_class.isPresent()) {
+                final Class current_class = list_classes.get(selected.getId());
+                if (current_class.isPresent().equals("true")) {
                     new AlertDialog.Builder(view.getContext())
                             .setTitle("Check out of class!")
-                            .setMessage(getString(R.string.class_format_full, current_class.getName(), current_class.getTeacher(), current_class.getTime(), current_class.getDay()))
+                            .setMessage(getString(R.string.class_format_full, current_class.getName(), current_class.getTeacherName(), current_class.getStart()))
                             .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
                                 public void onClick(DialogInterface dialog, int which) {
                                     ImageView classStar = getView().findViewById(R.id.class_star);
                                     classStar.setVisibility(View.INVISIBLE);
-                                    current_class.setPresent(false);
+                                    current_class.setPresent("true");
                                 }
                             })
 
@@ -117,13 +119,13 @@ public class ClassFragment extends Fragment {
                 } else {
                     new AlertDialog.Builder(view.getContext())
                             .setTitle("Check into class!")
-                            .setMessage(getString(R.string.class_format_full, current_class.getName(), current_class.getTeacher(), current_class.getTime(), current_class.getDay()))
+                            .setMessage(getContext().getString(R.string.class_format_description, current_class.getTeacherName(), current_class.getName(), current_class.getLocation()))
                             .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
                                 public void onClick(DialogInterface dialog, int which) {
                                     ImageView classStar = getView().findViewById(R.id.class_star);
                                     classStar.setVisibility(View.VISIBLE);
-                                    current_class.setPresent(true);
-                                    postRequest(prefs.getString("student_id", "69"),"3", true, false);
+                                    current_class.setPresent("true");
+                                    postRequest(prefs.getString("student_id", "69"), "3", true, false);
                                     Log.d(getActivity().getPackageName(), "Passed on to postRequest");
                                 }
                             })
@@ -144,10 +146,10 @@ public class ClassFragment extends Fragment {
                 LayoutInflater inflater = getActivity().getLayoutInflater();
                 View dialogView = inflater.inflate(R.layout.dialog_class_add, null);
 
-                final EditText classID =  dialogView.findViewById(R.id.et_class_id);
-                final EditText studentID =  dialogView.findViewById(R.id.et_student_id);
-                Button button1 =  dialogView.findViewById(R.id.buttonSubmit);
-                Button button2 =  dialogView.findViewById(R.id.buttonCancel);
+                final EditText classID = dialogView.findViewById(R.id.et_class_id);
+                final EditText studentID = dialogView.findViewById(R.id.et_student_id);
+                Button button1 = dialogView.findViewById(R.id.buttonSubmit);
+                Button button2 = dialogView.findViewById(R.id.buttonCancel);
 
                 button2.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -160,6 +162,9 @@ public class ClassFragment extends Fragment {
                     public void onClick(View view) {
                         dialogBuilder.dismiss();
                         postRequest(studentID.getText().toString(), classID.getText().toString(), true, true);
+                        db.addClass(new Class("MED1", "Medical History", 1, "Mr Hall", "Lecture Room 70", "FE:90:6F:57:2A:FB", "2019-8-18", "09:00:00", "11:00:00", "true"));
+                        db.addClass(new Class("MED1", "Life of Flex (of Muscles)", 1, "Mr Hall", "Lecture Room 70", "FE:90:6F:57:2A:FB", "2019-8-18", "11:00:00", "13:00:00", "true"));
+                        db.addClass(new Class("MED1", "Medical History", 1, "Mr Hall", "Lecture Room 70", "FE:90:6F:57:2A:FB", "2019-8-19", "09:00:00", "11:00:00", "true"));
                         Toast.makeText(getContext(), "Class Successfully Checked In", Toast.LENGTH_SHORT).show();
                     }
                 });
@@ -168,9 +173,24 @@ public class ClassFragment extends Fragment {
                 dialogBuilder.show();
             }
         });
-        list_known.add(new Class(0, "MED1","Medical History", "Mr Hall", "09:00", "Monday", "Lecture Room 70", "FE:90:6F:57:2A:FB", false));
-        list_known.add(new Class(1, "MED2","Life of the Flex (of muscles)", "Mr Copsey", "09:00", "Tuesday", "Lecture Room 70", "C0:28:8D:4E:27:B2", false));
+        Log.d("Reading: ", "Reading all classes");
+        List<Class> classes = db.getAllClasses();
 
+        for (Class cn : classes) {
+            String log = " " + cn.getId()
+                    + " " + cn.getCode()
+                    + " " + cn.getName()
+                    + " " + cn.getTeacherID()
+                    + " " + cn.getTeacherName()
+                    + " " + cn.getLocation()
+                    + " " + cn.getMac()
+                    + " " + cn.getDate()
+                    + " " + cn.getStart()
+                    + " " + cn.getFinish()
+                    + " " + cn.isPresent();
+            // Writing Classes to log
+            Log.d("Name: ", log);
+        }
     }
 
     /**
@@ -179,16 +199,19 @@ public class ClassFragment extends Fragment {
      *  Any found devices are passed to @mReceiver
      */
     public void deviceDiscovery() {
-        if (prefs.getBoolean("bluetooth_auto", true)) {
-            if (!searching) {
-                requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION}, 1001);
-                Log.d(getActivity().getPackageName(), "Searching...");
-                btAdapter.startDiscovery();
-                searching = true;
+        if (btAdapter != null){
+            if (prefs.getBoolean("bluetooth_auto", true)) {
+                if (!searching) {
+                    requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION}, 1001);
+                    Log.d(getActivity().getPackageName(), "Searching...");
+                    btAdapter.startDiscovery();
+                    searching = true;
+                }
             }
+
+        }
         }
 
-    }
     /**
      * Handles the ACTION_FOUND from the Device Discovery process
      *  TODO Compare to student schedule
@@ -199,7 +222,7 @@ public class ClassFragment extends Fragment {
             if (BluetoothDevice.ACTION_FOUND.equals(action)) {
                 BluetoothDevice device = intent.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE);
                 for (Class known : list_known) {
-                    if (known.getMacAddress().equals(device.getAddress())) {
+                    if (known.getMac().equals(device.getAddress())) {
                         list_classes.add(known);
                     }
                 }
