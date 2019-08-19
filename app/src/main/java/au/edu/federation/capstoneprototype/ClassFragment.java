@@ -162,9 +162,9 @@ public class ClassFragment extends Fragment {
                     public void onClick(View view) {
                         dialogBuilder.dismiss();
                         postRequest(studentID.getText().toString(), classID.getText().toString(), true, true);
-                        db.addClass(new Class("MED1", "Medical History", 1, "Mr Hall", "Lecture Room 70", "FE:90:6F:57:2A:FB", "2019-8-18", "09:00:00", "11:00:00", "true"));
-                        db.addClass(new Class("MED1", "Life of Flex (of Muscles)", 1, "Mr Hall", "Lecture Room 70", "FE:90:6F:57:2A:FB", "2019-8-18", "11:00:00", "13:00:00", "true"));
-                        db.addClass(new Class("MED1", "Medical History", 1, "Mr Hall", "Lecture Room 70", "FE:90:6F:57:2A:FB", "2019-8-19", "09:00:00", "11:00:00", "true"));
+                        db.addClass(new Class("MED1", "Medical History", 1, "Mr Hall", "Lecture Room 70", "FE:90:6F:57:2A:FB", "2019-8-20", "09:00:00", "11:00:00", "true"));
+                        db.addClass(new Class("MED1", "Life of Flex (of Muscles)", 1, "Mr Hall", "Lecture Room 70", "FE:90:6F:57:2A:FB", "2019-8-20", "11:00:00", "13:00:00", "true"));
+                        db.addClass(new Class("MED1", "Medical History", 1, "Mr Hall", "Lecture Room 70", "FE:90:6F:57:2A:FB", "2019-8-21", "09:00:00", "11:00:00", "true"));
                         Toast.makeText(getContext(), "Class Successfully Checked In", Toast.LENGTH_SHORT).show();
                     }
                 });
