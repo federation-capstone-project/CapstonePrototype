@@ -76,6 +76,13 @@ public class ClassScheduleFragment extends Fragment {
         _context = this.getContext();
         super.onViewCreated(view, savedInstanceState);
         getActivity().setTitle("Class Schedule");
+        adapter.clear();
+        for (int i = 0; i < sss.size(); i++) {
+            if (compareTwoDates(sss.get(i).getClassDateTime(), (Calendar.getInstance().getTime()))) {
+                adapter.add(sss.get(i));
+            }
+        }
+        dateview.setText(Calendar.getInstance().get(Calendar.DAY_OF_MONTH) + "/" + (Calendar.getInstance().get(Calendar.MONTH) + "/" + (Calendar.getInstance().get(Calendar.YEAR))));
 
         openDatePickerButton = view.findViewById(R.id.btnitem);
         openDatePickerButton.setOnClickListener(new View.OnClickListener() {

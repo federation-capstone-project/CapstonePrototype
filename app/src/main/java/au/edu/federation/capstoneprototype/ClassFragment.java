@@ -22,13 +22,18 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 import okhttp3.Call;
@@ -49,11 +54,13 @@ public class ClassFragment extends Fragment {
     boolean searching = false;
     int REQUEST_ENABLE_BT = 0;
     SharedPreferences prefs;
+    public TextView tvDate;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         prefs = getActivity().getSharedPreferences("prefs", Context.MODE_PRIVATE);
         return inflater.inflate(R.layout.fragment_class, container, false);
+
     }
 
     @Override
@@ -79,6 +86,10 @@ public class ClassFragment extends Fragment {
         getActivity().setTitle("Classes");
         btAdapter = BluetoothAdapter.getDefaultAdapter();
         final DatabaseHandler db = new DatabaseHandler(getContext());
+        tvDate =view.findViewById(R.id.currentDate);
+        tvDate.setText(Calendar.getInstance().get(Calendar.DAY_OF_MONTH) + "/" + (Calendar.getInstance().get(Calendar.MONTH) + "/" + (Calendar.getInstance().get(Calendar.YEAR))));
+
+
         if (btAdapter != null) {
             if (!btAdapter.isEnabled()) {
                 Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
@@ -95,6 +106,7 @@ public class ClassFragment extends Fragment {
         adapter = new ClassAdapter(getActivity(), list_classes);
         saved = getView().findViewById(R.id.saved_dynamic);
         saved.setAdapter(adapter);
+        list_classes.clear();
         saved.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
@@ -162,10 +174,18 @@ public class ClassFragment extends Fragment {
                     public void onClick(View view) {
                         dialogBuilder.dismiss();
                         postRequest(studentID.getText().toString(), classID.getText().toString(), true, true);
-                        db.addClass(new Class("MED1", "Medical History", 1, "Mr Hall", "Lecture Room 70", "FE:90:6F:57:2A:FB", "2019-8-20", "09:00:00", "11:00:00", "true"));
-                        db.addClass(new Class("MED1", "Life of Flex (of Muscles)", 1, "Mr Hall", "Lecture Room 70", "FE:90:6F:57:2A:FB", "2019-8-20", "11:00:00", "13:00:00", "true"));
-                        db.addClass(new Class("MED1", "Medical History", 1, "Mr Hall", "Lecture Room 70", "FE:90:6F:57:2A:FB", "2019-8-21", "09:00:00", "11:00:00", "true"));
+
+                        db.addClass(new Class("MED1", "Medical Historyy", 1, "Mr Hall", "Lecture Room 70", "FE:90:6F:57:2A:FB", "2019-8-25", "09:00:00", "11:00:00", "true"));
+                        db.addClass(new Class("MED1", "Life of Flex (of Muscles)", 1, "Mr Hall", "Lecture Room 70", "FE:90:6F:57:2A:FB", "2019-8-25", "11:00:00", "13:00:00", "true"));
+                        db.addClass(new Class("MED1", "Medical History", 1, "Mr Hall", "Lecture Room 70", "FE:90:6F:57:2A:FB", "2019-8-25", "09:00:00", "11:00:00", "true"));
                         Toast.makeText(getContext(), "Class Successfully Checked In", Toast.LENGTH_SHORT).show();
+                        list_classes.clear();
+                        for (int i = 1; i < db.getAllClasses().size(); i++) {
+                           Date newDate = string_date(db.getClass(i).getDate());
+                           if (compareTwoDates(newDate, Calendar.getInstance().getTime()))
+                            list_classes.add(db.getClass(i));
+                            adapter.notifyDataSetChanged();
+                        }
                     }
                 });
 
@@ -291,4 +311,45 @@ public class ClassFragment extends Fragment {
                 }
             });
         }
+
+
+    public Date string_date(String date) {
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        Date myDate = null;
+        try {
+            myDate = dateFormat.parse(date);
+
+            return myDate;
+
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        return myDate;
+
+    }
+    public boolean compareTwoDates(Date startDate, Date endDate) {
+        Date sDate = getZeroTimeDate(startDate);
+        Date eDate = getZeroTimeDate(endDate);
+        if (sDate.before(eDate)) {
+            Log.d("", "Start date is before end date");
+            return false;
+        }
+        if (sDate.after(eDate)) {
+            Log.d("", "Start date is after end date");
+            return false;
+        }
+        Log.d("", "Start date and end date are equal");
+        return true;
+    }
+
+    private Date getZeroTimeDate(Date date) {
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(date);
+        calendar.set(Calendar.HOUR_OF_DAY, 0);
+        calendar.set(Calendar.MINUTE, 0);
+        calendar.set(Calendar.SECOND, 0);
+        calendar.set(Calendar.MILLISECOND, 0);
+        date = calendar.getTime();
+        return date;
+    }
 }
