@@ -106,7 +106,23 @@ public class ClassFragment extends Fragment {
         adapter = new ClassAdapter(getActivity(), list_classes);
         saved = getView().findViewById(R.id.saved_dynamic);
         saved.setAdapter(adapter);
+       // list_classes.clear();
+        getContext().deleteDatabase("studentClasses");
+        db.addClass(new Class("MED1", "Medical Historyy", 1, "Mr Hall", "Lecture Room 70", "FE:90:6F:57:2A:FB", "2019-8-26", "09:00:00", "11:00:00", "true"));
+        db.addClass(new Class("MED1", "Life of Flex (of Muscles)", 1, "Mr Hall", "Lecture Room 70", "FE:90:6F:57:2A:FB", "2019-8-25", "11:00:00", "13:00:00", "true"));
+        db.addClass(new Class("MED1", "Medical History", 1, "Mr Hall", "Lecture Room 70", "FE:90:6F:57:2A:FB", "2019-8-26", "09:00:00", "11:00:00", "true"));
+        db.addClass(new Class("MED1", "Medical boy", 1, "Mr Hall", "Lecture Room 70", "FE:90:6F:57:2A:FB", "2019-8-26", "09:00:00", "11:00:00", "true"));
+        Toast.makeText(getContext(), "Class Successfully Checked In", Toast.LENGTH_SHORT).show();
         list_classes.clear();
+
+        Log.e("hi",""+db.getAllClasses().size());
+        for (int i = 1; i < db.getAllClasses().size()+1; i++) {
+            Date newDate = string_date(db.getClass(i).getDate());
+            Log.e("hi",""+db.getClass(i));
+            if (compareTwoDates(newDate, Calendar.getInstance().getTime()))
+                list_classes.add(db.getClass(i));
+            adapter.notifyDataSetChanged();
+        }
         saved.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
@@ -175,17 +191,6 @@ public class ClassFragment extends Fragment {
                         dialogBuilder.dismiss();
                         postRequest(studentID.getText().toString(), classID.getText().toString(), true, true);
 
-                        db.addClass(new Class("MED1", "Medical Historyy", 1, "Mr Hall", "Lecture Room 70", "FE:90:6F:57:2A:FB", "2019-8-25", "09:00:00", "11:00:00", "true"));
-                        db.addClass(new Class("MED1", "Life of Flex (of Muscles)", 1, "Mr Hall", "Lecture Room 70", "FE:90:6F:57:2A:FB", "2019-8-25", "11:00:00", "13:00:00", "true"));
-                        db.addClass(new Class("MED1", "Medical History", 1, "Mr Hall", "Lecture Room 70", "FE:90:6F:57:2A:FB", "2019-8-25", "09:00:00", "11:00:00", "true"));
-                        Toast.makeText(getContext(), "Class Successfully Checked In", Toast.LENGTH_SHORT).show();
-                        list_classes.clear();
-                        for (int i = 1; i < db.getAllClasses().size(); i++) {
-                           Date newDate = string_date(db.getClass(i).getDate());
-                           if (compareTwoDates(newDate, Calendar.getInstance().getTime()))
-                            list_classes.add(db.getClass(i));
-                            adapter.notifyDataSetChanged();
-                        }
                     }
                 });
 
