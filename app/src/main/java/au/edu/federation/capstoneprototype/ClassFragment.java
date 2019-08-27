@@ -108,10 +108,10 @@ public class ClassFragment extends Fragment {
         saved.setAdapter(adapter);
        // list_classes.clear();
         getContext().deleteDatabase("studentClasses");
-        db.addClass(new Class("MED1", "Medical Historyy", 1, "Mr Hall", "Lecture Room 70", "FE:90:6F:57:2A:FB", "2019-8-26", "09:00:00", "11:00:00", "true"));
-        db.addClass(new Class("MED1", "Life of Flex (of Muscles)", 1, "Mr Hall", "Lecture Room 70", "FE:90:6F:57:2A:FB", "2019-8-25", "11:00:00", "13:00:00", "true"));
-        db.addClass(new Class("MED1", "Medical History", 1, "Mr Hall", "Lecture Room 70", "FE:90:6F:57:2A:FB", "2019-8-26", "09:00:00", "11:00:00", "true"));
-        db.addClass(new Class("MED1", "Medical boy", 1, "Mr Hall", "Lecture Room 70", "FE:90:6F:57:2A:FB", "2019-8-26", "09:00:00", "11:00:00", "true"));
+        db.addClass(new Class("MED1", "Medical Historyy", 1, "Mr Hall", "Lecture Room 70", "FE:90:6F:57:2A:FB", "2019-8-27", "09:00:00", "11:00:00", "true"));
+        db.addClass(new Class("MED1", "Life of Flex (of Muscles)", 1, "Mr Hall", "Lecture Room 70", "FE:90:6F:57:2A:FB", "2019-8-27", "11:00:00", "13:00:00", "true"));
+        db.addClass(new Class("MED1", "Medical History", 1, "Mr Hall", "Lecture Room 70", "FE:90:6F:57:2A:FB", "2019-8-28", "09:00:00", "11:00:00", "true"));
+        db.addClass(new Class("MED1", "Medical boy", 1, "Mr Hall", "Lecture Room 70", "FE:90:6F:57:2A:FB", "2019-8-29", "09:00:00", "11:00:00", "true"));
         Toast.makeText(getContext(), "Class Successfully Checked In", Toast.LENGTH_SHORT).show();
         list_classes.clear();
 
