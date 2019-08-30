@@ -40,6 +40,12 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="@string/bluetooth_auto_scan" />
+
+            <Button
+                android:id="@+id/btn_sync_classes"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Sync Classes" />
         </LinearLayout>
     </ScrollView>
 </FrameLayout>

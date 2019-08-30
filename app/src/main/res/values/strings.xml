@@ -1,7 +1,8 @@
 <resources>
     <string name="app_name">CapstonePrototype</string>
     <string name="class_format_full">"%1$s (%2$s) \n %3$s"</string>
-    <string name="class_format_description">"%1$s (%2$s %3$s)"</string>
+    <string name="class_format_description">"%1$s %2$s\n(%3$s)"</string>
+    <string name="class_format_description_long">"%1$s (%2$s)  %3$s - %4$s"</string>
     <string name="title_activity_main">MainActivity</string>
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>

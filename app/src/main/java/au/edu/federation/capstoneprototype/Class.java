@@ -1,9 +1,5 @@
 package au.edu.federation.capstoneprototype;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.time.LocalDate;
-
 public class Class {
 
     private int id;
@@ -133,6 +129,4 @@ public class Class {
     public void setPresent(String present) {
         this.present = present;
     }
-
-
 }

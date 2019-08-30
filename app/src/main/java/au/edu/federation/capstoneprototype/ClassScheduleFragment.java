@@ -21,6 +21,10 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
+import java.util.TimeZone;
+
+import static au.edu.federation.capstoneprototype.Utils.compareTwoDates;
 
 public class ClassScheduleFragment extends Fragment {
 
@@ -61,7 +65,7 @@ public class ClassScheduleFragment extends Fragment {
                     + " " + cn.getStart()
                     + " " + cn.getFinish()
                     + " " + cn.isPresent();
-            CalItem qq = new CalItem(cn.getName(), cn.getTeacherName(), cn.getLocation(), cn.getStart() + " - " + cn.getFinish(), string_date(cn.getDate()));
+            CalItem qq = new CalItem(cn.getName(), cn.getTeacherName(), cn.getLocation(), Utils.string_time(cn.getStart()) + " - " + Utils.string_time(cn.getFinish()), Utils.string_date_full(cn.getDate()));
             sss.add(qq);
             // Writing Classes to log
             Log.d("Name: ", log);
@@ -112,43 +116,5 @@ public class ClassScheduleFragment extends Fragment {
 
     }
 
-    public Date string_date(String date) {
-        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-        Date myDate = null;
-        try {
-            myDate = dateFormat.parse(date);
 
-            return myDate;
-
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
-        return myDate;
-
-    }
-    public boolean compareTwoDates(Date startDate, Date endDate) {
-        Date sDate = getZeroTimeDate(startDate);
-        Date eDate = getZeroTimeDate(endDate);
-        if (sDate.before(eDate)) {
-            Log.d("", "Start date is before end date");
-            return false;
-        }
-        if (sDate.after(eDate)) {
-            Log.d("", "Start date is after end date");
-            return false;
-        }
-        Log.d("", "Start date and end date are equal");
-        return true;
-    }
-
-    private Date getZeroTimeDate(Date date) {
-        Calendar calendar = Calendar.getInstance();
-        calendar.setTime(date);
-        calendar.set(Calendar.HOUR_OF_DAY, 0);
-        calendar.set(Calendar.MINUTE, 0);
-        calendar.set(Calendar.SECOND, 0);
-        calendar.set(Calendar.MILLISECOND, 0);
-        date = calendar.getTime();
-        return date;
-    }
 }

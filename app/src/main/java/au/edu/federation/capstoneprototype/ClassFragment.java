@@ -29,6 +29,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
+import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -38,6 +39,7 @@ import java.util.List;
 
 import okhttp3.Call;
 import okhttp3.Callback;
+import okhttp3.Credentials;
 import okhttp3.MediaType;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
@@ -46,7 +48,7 @@ import okhttp3.Response;
 
 
 public class ClassFragment extends Fragment {
-    public List<Class> list_known = new ArrayList<>();
+    public List<String> seen_macs = new ArrayList<>();
     public List<Class> list_classes = new ArrayList<>();
     BluetoothAdapter btAdapter;
     ClassAdapter adapter;
@@ -83,13 +85,11 @@ public class ClassFragment extends Fragment {
     public void onViewCreated(final View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         //you can set the title for your toolbar here for different fragments different titles
-        getActivity().setTitle("Classes");
+        getActivity().setTitle("Today");
         btAdapter = BluetoothAdapter.getDefaultAdapter();
         final DatabaseHandler db = new DatabaseHandler(getContext());
-        tvDate =view.findViewById(R.id.currentDate);
+        tvDate = view.findViewById(R.id.currentDate);
         tvDate.setText(Calendar.getInstance().get(Calendar.DAY_OF_MONTH) + "/" + (Calendar.getInstance().get(Calendar.MONTH) + "/" + (Calendar.getInstance().get(Calendar.YEAR))));
-
-
         if (btAdapter != null) {
             if (!btAdapter.isEnabled()) {
                 Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
@@ -106,62 +106,58 @@ public class ClassFragment extends Fragment {
         adapter = new ClassAdapter(getActivity(), list_classes);
         saved = getView().findViewById(R.id.saved_dynamic);
         saved.setAdapter(adapter);
-       // list_classes.clear();
-        getContext().deleteDatabase("studentClasses");
-        db.addClass(new Class("MED1", "Medical Historyy", 1, "Mr Hall", "Lecture Room 70", "FE:90:6F:57:2A:FB", "2019-8-27", "09:00:00", "11:00:00", "true"));
-        db.addClass(new Class("MED1", "Life of Flex (of Muscles)", 1, "Mr Hall", "Lecture Room 70", "FE:90:6F:57:2A:FB", "2019-8-27", "11:00:00", "13:00:00", "true"));
-        db.addClass(new Class("MED1", "Medical History", 1, "Mr Hall", "Lecture Room 70", "FE:90:6F:57:2A:FB", "2019-8-28", "09:00:00", "11:00:00", "true"));
-        db.addClass(new Class("MED1", "Medical boy", 1, "Mr Hall", "Lecture Room 70", "FE:90:6F:57:2A:FB", "2019-8-29", "09:00:00", "11:00:00", "true"));
-        Toast.makeText(getContext(), "Class Successfully Checked In", Toast.LENGTH_SHORT).show();
         list_classes.clear();
-
-        Log.e("hi",""+db.getAllClasses().size());
         for (int i = 1; i < db.getAllClasses().size()+1; i++) {
-            Date newDate = string_date(db.getClass(i).getDate());
-            Log.e("hi",""+db.getClass(i));
-            if (compareTwoDates(newDate, Calendar.getInstance().getTime()))
+            Date newDate = Utils.string_date_full(db.getClass(i).getDate());
+            if (Utils.compareTwoDates(newDate, Calendar.getInstance().getTime()))
                 list_classes.add(db.getClass(i));
             adapter.notifyDataSetChanged();
         }
         saved.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            Class current_class;
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                Class selected = (Class) saved.getItemAtPosition(i);
-                final Class current_class = list_classes.get(selected.getId());
-                if (current_class.isPresent().equals("true")) {
-                    new AlertDialog.Builder(view.getContext())
-                            .setTitle("Check out of class!")
-                            .setMessage(getString(R.string.class_format_full, current_class.getName(), current_class.getTeacherName(), current_class.getStart()))
-                            .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
-                                public void onClick(DialogInterface dialog, int which) {
-                                    ImageView classStar = getView().findViewById(R.id.class_star);
-                                    classStar.setVisibility(View.INVISIBLE);
-                                    current_class.setPresent("true");
-                                }
-                            })
+                current_class = (Class) saved.getItemAtPosition(i);
+                if(seen_macs.contains(current_class.getMac())){
+                    if (current_class.isPresent().equals("true")) {
+                        new AlertDialog.Builder(view.getContext())
+                                .setTitle("Check out of class " + current_class.getName())
+                                .setMessage(getString(R.string.class_format_description, current_class.getTeacherName(), current_class.getLocation(), Utils.string_date_full(current_class.getDate())))
+                                .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        ImageView classStar = getView().findViewById(R.id.class_star);
+                                        classStar.setVisibility(View.INVISIBLE);
+                                        current_class.setPresent("false");
+                                    }
+                                })
 
-                            // A null listener allows the button to dismiss the dialog and take no further action.
-                            .setNegativeButton(android.R.string.no, null)
-                            .setIcon(android.R.drawable.ic_dialog_alert)
-                            .show();
-                } else {
-                    new AlertDialog.Builder(view.getContext())
-                            .setTitle("Check into class!")
-                            .setMessage(getContext().getString(R.string.class_format_description, current_class.getTeacherName(), current_class.getName(), current_class.getLocation()))
-                            .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
-                                public void onClick(DialogInterface dialog, int which) {
-                                    ImageView classStar = getView().findViewById(R.id.class_star);
-                                    classStar.setVisibility(View.VISIBLE);
-                                    current_class.setPresent("true");
-                                    postRequest(prefs.getString("student_id", "69"), "3", true, false);
-                                    Log.d(getActivity().getPackageName(), "Passed on to postRequest");
-                                }
-                            })
+                                // A null listener allows the button to dismiss the dialog and take no further action.
+                                .setNegativeButton(android.R.string.no, null)
+                                .setIcon(android.R.drawable.ic_dialog_alert)
+                                .show();
+                    } else {
+                        new AlertDialog.Builder(view.getContext())
+                                .setTitle("Check into class " + current_class.getName())
+                                .setMessage(getString(R.string.class_format_description, current_class.getTeacherName(), current_class.getLocation(), Utils.string_date_full(current_class.getDate())))
+                                .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        ImageView classStar = getView().findViewById(R.id.class_star);
+                                        classStar.setVisibility(View.VISIBLE);
+                                        current_class.setPresent("true");
+                                        postRequest(prefs.getString("student_id", "69"), current_class.getCode(), true, false);
+                                        Log.d(getActivity().getPackageName(), "Passed on to postRequest");
+                                    }
+                                })
 
-                            // A null listener allows the button to dismiss the dialog and take no further action.
-                            .setNegativeButton(android.R.string.no, null)
-                            .setIcon(android.R.drawable.ic_dialog_alert)
-                            .show();
+                                // A null listener allows the button to dismiss the dialog and take no further action.
+                                .setNegativeButton(android.R.string.no, null)
+                                .setIcon(android.R.drawable.ic_dialog_alert)
+                                .show();
+
+                    }
+                }else {
+                    Log.d(getActivity().getPackageName(), "Mac not seen");
+                    Toast.makeText(getContext(), "Unable to communicate with beacon!", Toast.LENGTH_SHORT).show();
 
                 }
             }
@@ -198,25 +194,8 @@ public class ClassFragment extends Fragment {
                 dialogBuilder.show();
             }
         });
-        Log.d("Reading: ", "Reading all classes");
-        List<Class> classes = db.getAllClasses();
-
-        for (Class cn : classes) {
-            String log = " " + cn.getId()
-                    + " " + cn.getCode()
-                    + " " + cn.getName()
-                    + " " + cn.getTeacherID()
-                    + " " + cn.getTeacherName()
-                    + " " + cn.getLocation()
-                    + " " + cn.getMac()
-                    + " " + cn.getDate()
-                    + " " + cn.getStart()
-                    + " " + cn.getFinish()
-                    + " " + cn.isPresent();
-            // Writing Classes to log
-            Log.d("Name: ", log);
-        }
     }
+
 
     /**
      *  Initiates the device discover process
@@ -246,13 +225,7 @@ public class ClassFragment extends Fragment {
             String action = intent.getAction();
             if (BluetoothDevice.ACTION_FOUND.equals(action)) {
                 BluetoothDevice device = intent.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE);
-                for (Class known : list_known) {
-                    if (known.getMac().equals(device.getAddress())) {
-                        list_classes.add(known);
-                    }
-                }
-
-                Log.i("BT", device.getName() + "\n" + device.getAddress());
+                seen_macs.add(device.getAddress());
                 adapter.notifyDataSetChanged();
             } else if (BluetoothAdapter.ACTION_DISCOVERY_STARTED.equals(action)) {
                 Log.d(getActivity().getPackageName(), "Discovery Started");
@@ -277,7 +250,7 @@ public class ClassFragment extends Fragment {
 
         public void postRequest(String student,  String event,  Boolean attended,  Boolean manual) {
             MediaType MEDIA_TYPE = MediaType.parse("application/json");
-            String url = "https://capstone.blny.me/studentevents/";
+            String url = "https://capstone.blny.me/studentevent/";
             OkHttpClient client = new OkHttpClient();
             JSONObject postdata = new JSONObject();
             try {
@@ -291,11 +264,12 @@ public class ClassFragment extends Fragment {
             }
 
             RequestBody body = RequestBody.create(MEDIA_TYPE, postdata.toString());
+            String credentials = Credentials.basic("administrator", "PotatoPancake1");
             Request request = new Request.Builder()
                     .url(url)
                     .post(body)
                     .header("Content-Type", "application/json")
-                    .header("Authorization", "Token f89c13e25cd9d21a9d99d061d8e05e1cf5cff569")
+                    .header("Authorization", credentials)
                     .build();
 
             client.newCall(request).enqueue(new Callback() {
@@ -316,45 +290,4 @@ public class ClassFragment extends Fragment {
                 }
             });
         }
-
-
-    public Date string_date(String date) {
-        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-        Date myDate = null;
-        try {
-            myDate = dateFormat.parse(date);
-
-            return myDate;
-
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
-        return myDate;
-
-    }
-    public boolean compareTwoDates(Date startDate, Date endDate) {
-        Date sDate = getZeroTimeDate(startDate);
-        Date eDate = getZeroTimeDate(endDate);
-        if (sDate.before(eDate)) {
-            Log.d("", "Start date is before end date");
-            return false;
-        }
-        if (sDate.after(eDate)) {
-            Log.d("", "Start date is after end date");
-            return false;
-        }
-        Log.d("", "Start date and end date are equal");
-        return true;
-    }
-
-    private Date getZeroTimeDate(Date date) {
-        Calendar calendar = Calendar.getInstance();
-        calendar.setTime(date);
-        calendar.set(Calendar.HOUR_OF_DAY, 0);
-        calendar.set(Calendar.MINUTE, 0);
-        calendar.set(Calendar.SECOND, 0);
-        calendar.set(Calendar.MILLISECOND, 0);
-        date = calendar.getTime();
-        return date;
-    }
 }

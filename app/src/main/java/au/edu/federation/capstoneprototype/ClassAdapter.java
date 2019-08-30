@@ -12,7 +12,11 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 
@@ -38,7 +42,8 @@ public class ClassAdapter extends ArrayAdapter<Class> {
             beaconName.setText(beacon.getName());
         }
         TextView beaconMac = convertView.findViewById(R.id.class_description);
-        beaconMac.setText(getContext().getString(R.string.class_format_description,beacon.getTeacherName(), beacon.getName(), beacon.getLocation()));
+        beaconMac.setText(getContext().getString(R.string.class_format_description_long,beacon.getTeacherName(), beacon.getLocation(), Utils.string_time(beacon.getStart()), Utils.string_time(beacon.getFinish())));
         return convertView;
     }
+
 }
