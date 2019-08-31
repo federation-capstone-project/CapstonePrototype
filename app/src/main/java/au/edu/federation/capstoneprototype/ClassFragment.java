@@ -202,16 +202,18 @@ public class ClassFragment extends Fragment {
             @Override
             public void run() {
                 //Do something after 20 seconds
-                Log.e("HI","Me");
-                for (int i = 0; i < list_classes.size()  ; i++) {
-                    if (seen_macs.contains(list_classes.get(i))){
+                Log.e("HI","Me" + seen_macs.toString()+ " " + adapter.getCount());
+                for (int i = 0; i < adapter.getCount()  ; i++) {
+                    Log.e("HI","Looking" + adapter.getCount());
+                    if (seen_macs.contains(adapter.getItem(i).getMac())){
                         adapter.getItem(i).setCansee(true);
+                        Log.e("HI","found");
                         adapter.notifyDataSetChanged();
                  }
                 }
-                handler.postDelayed(this, 60000);
+                handler.postDelayed(this, 5000);
             }
-        }, 60000);  //the time is in miliseconds
+        }, 5000);  //the time is in miliseconds
 
     }
 

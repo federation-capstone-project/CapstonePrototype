@@ -2,6 +2,7 @@ package au.edu.federation.capstoneprototype;
 
 import android.content.Context;
 import android.content.res.Resources;
+import android.graphics.Color;
 import android.support.v7.app.AlertDialog;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -38,16 +39,19 @@ public class ClassAdapter extends ArrayAdapter<Class> {
         TextView beaconName = convertView.findViewById(R.id.class_name);
         if (beacon.getName() == null) {
             beaconName.setText("");
+        }else if (beacon.canSee()){
+            beaconName.setTextColor(Color.RED);
+            beaconName.setText(beacon.getName() + " *");
         }else {
+            beaconName.setTextColor(Color.BLACK);
             beaconName.setText(beacon.getName());
         }
         TextView beaconMac = convertView.findViewById(R.id.class_description);
-        if (beacon.canSee()){
-            beaconMac.setText(getContext().getString(R.string.class_format_description_long,beacon.getTeacherName(), beacon.getLocation(), Utils.string_time(beacon.getStart()), Utils.string_time(beacon.getFinish()))+ "*");
 
-        }else {
-            beaconMac.setText(getContext().getString(R.string.class_format_description_long, beacon.getTeacherName(), beacon.getLocation(), Utils.string_time(beacon.getStart()), Utils.string_time(beacon.getFinish())));
-        } return convertView;
+            beaconMac.setText(getContext().getString(R.string.class_format_description_long,beacon.getTeacherName(), beacon.getLocation(), Utils.string_time(beacon.getStart()), Utils.string_time(beacon.getFinish())));
+
+
+         return convertView;
     }
 
 }
