@@ -10,6 +10,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AlertDialog;
@@ -118,6 +119,7 @@ public class ClassFragment extends Fragment {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                 current_class = (Class) saved.getItemAtPosition(i);
+
                 if(seen_macs.contains(current_class.getMac())){
                     if (current_class.isPresent().equals("true")) {
                         new AlertDialog.Builder(view.getContext())
@@ -194,6 +196,23 @@ public class ClassFragment extends Fragment {
                 dialogBuilder.show();
             }
         });
+
+        final Handler handler = new Handler();
+        handler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                //Do something after 20 seconds
+                Log.e("HI","Me");
+                for (int i = 0; i < list_classes.size()  ; i++) {
+                    if (seen_macs.contains(list_classes.get(i))){
+                        adapter.getItem(i).setCansee(true);
+                        adapter.notifyDataSetChanged();
+                 }
+                }
+                handler.postDelayed(this, 60000);
+            }
+        }, 60000);  //the time is in miliseconds
+
     }
 
 
@@ -290,4 +309,6 @@ public class ClassFragment extends Fragment {
                 }
             });
         }
+
+
 }

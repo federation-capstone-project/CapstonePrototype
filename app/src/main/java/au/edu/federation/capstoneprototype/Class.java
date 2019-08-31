@@ -13,6 +13,7 @@ public class Class {
     private String start; //
     private String finish; //
     private String present;
+    private boolean cansee;
     public Class(){   }
     public Class(int id, String code, String name, int teacher_id, String teacher_name, String location, String mac, String date, String start, String finish, String present) {
         this.id = id;
@@ -129,4 +130,8 @@ public class Class {
     public void setPresent(String present) {
         this.present = present;
     }
+
+    public boolean canSee(){return cansee;}
+
+    public void setCansee(Boolean cansee) {this.cansee = cansee;}
 }
