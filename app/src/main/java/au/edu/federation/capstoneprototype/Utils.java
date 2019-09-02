@@ -47,9 +47,9 @@ public class Utils {
             return false;
         }
         if (sDate.after(eDate)) {
-            return true;
+            return false;
         }
-        return false;
+        return true;
     }
 
     private static Date getZeroTimeDate(Date date) {
