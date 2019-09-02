@@ -13,6 +13,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AlertDialog;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -54,6 +55,7 @@ public class ClassFragment extends Fragment {
     BluetoothAdapter btAdapter;
     ClassAdapter adapter;
     ListView saved;
+    SwipeRefreshLayout swipe_view;
     boolean searching = false;
     int REQUEST_ENABLE_BT = 0;
     SharedPreferences prefs;
@@ -196,6 +198,15 @@ public class ClassFragment extends Fragment {
                 dialogBuilder.show();
             }
         });
+        swipe_view = view.findViewById(R.id.swiperefresh);
+        swipe_view.setOnRefreshListener(
+                new SwipeRefreshLayout.OnRefreshListener() {
+                    @Override
+                    public void onRefresh() {
+                        deviceDiscovery();
+                    }
+                }
+        );
 
         final Handler handler = new Handler();
         handler.postDelayed(new Runnable() {
