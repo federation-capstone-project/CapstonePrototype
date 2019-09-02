@@ -129,9 +129,10 @@ public class ClassFragment extends Fragment {
                                 .setMessage(getString(R.string.class_format_description, current_class.getTeacherName(), current_class.getLocation(), Utils.string_date_full(current_class.getDate())))
                                 .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
                                     public void onClick(DialogInterface dialog, int which) {
-                                        ImageView classStar = getView().findViewById(R.id.class_star);
-                                        classStar.setVisibility(View.INVISIBLE);
+                                      //  ImageView classStar = getView().findViewById(R.id.class_star);
+                                     //   classStar.setVisibility(View.INVISIBLE);
                                         current_class.setPresent("false");
+                                        adapter.notifyDataSetChanged();
                                     }
                                 })
 
@@ -145,11 +146,12 @@ public class ClassFragment extends Fragment {
                                 .setMessage(getString(R.string.class_format_description, current_class.getTeacherName(), current_class.getLocation(), Utils.string_date_full(current_class.getDate())))
                                 .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
                                     public void onClick(DialogInterface dialog, int which) {
-                                        ImageView classStar = getView().findViewById(R.id.class_star);
-                                        classStar.setVisibility(View.VISIBLE);
+                                        //ImageView classStar = getView().findViewById(R.id.class_star);
+                                        //classStar.setVisibility(View.VISIBLE);
                                         current_class.setPresent("true");
                                         postRequest(prefs.getString("student_id", "69"), current_class.getCode(), true, false);
                                         Log.d(getActivity().getPackageName(), "Passed on to postRequest");
+                                        adapter.notifyDataSetChanged();
                                     }
                                 })
 

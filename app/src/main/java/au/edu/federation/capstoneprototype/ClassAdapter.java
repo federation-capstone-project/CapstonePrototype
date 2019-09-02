@@ -23,7 +23,7 @@ import java.util.List;
 
 public class ClassAdapter extends ArrayAdapter<Class> {
     private List<Class> list;
-
+    public ImageView star;
     ClassAdapter(Context context, List<Class> list) {
         super (context, R.layout.beacon, list);
         this.list = list;
@@ -33,18 +33,28 @@ public class ClassAdapter extends ArrayAdapter<Class> {
         if (convertView == null) {
             LayoutInflater inflater = LayoutInflater.from(getContext());
             convertView = inflater.inflate(R.layout.beacon, parent, false);
+
         }
         final Class beacon = list.get(position);
-
+        ImageView star = convertView.findViewById(R.id.class_star);
         TextView beaconName = convertView.findViewById(R.id.class_name);
         if (beacon.getName() == null) {
             beaconName.setText("");
         }else if (beacon.canSee()){
             beaconName.setTextColor(Color.RED);
             beaconName.setText(beacon.getName() + " *");
+
         }else {
             beaconName.setTextColor(Color.BLACK);
             beaconName.setText(beacon.getName());
+        }
+
+        if (beacon.isPresent().equals("true"))
+        {
+            star.setVisibility(convertView.VISIBLE);
+        }else
+        {
+            star.setVisibility(convertView.INVISIBLE);
         }
         TextView beaconMac = convertView.findViewById(R.id.class_description);
 

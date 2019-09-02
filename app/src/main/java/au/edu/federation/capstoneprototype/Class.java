@@ -14,6 +14,7 @@ public class Class {
     private String finish; //
     private String present;
     private boolean cansee;
+
     public Class(){   }
     public Class(int id, String code, String name, int teacher_id, String teacher_name, String location, String mac, String date, String start, String finish, String present) {
         this.id = id;
