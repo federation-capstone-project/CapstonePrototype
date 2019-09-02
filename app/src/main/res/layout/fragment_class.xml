@@ -7,35 +7,29 @@
         android:layout_height="match_parent"
         tools:context=".ClassFragment">
 
-        <TextView
-            android:id="@+id/currentDate"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:text="TextView"
-            app:layout_constraintBottom_toTopOf="@+id/swiperefresh"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-
-    <android.support.design.widget.FloatingActionButton
-        android:id="@+id/add_beacon"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="8dp"
-        android:layout_marginBottom="8dp"
-        android:clickable="true"
-        app:backgroundTint="@color/colorAccent"
-        app:layout_constraintBottom_toBottomOf="@id/swiperefresh"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:srcCompat="@android:drawable/ic_menu_agenda" />
-
-    <android.support.v4.widget.SwipeRefreshLayout
+        <android.support.v4.widget.SwipeRefreshLayout
             android:id="@+id/swiperefresh"
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
-            <ListView
+            <TextView
+                android:id="@+id/currentDate"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:text="TextView" />
+
+            <android.support.design.widget.FloatingActionButton
+            android:id="@+id/add_beacon"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="8dp"
+            android:layout_marginBottom="8dp"
+            android:clickable="true"
+            app:backgroundTint="@color/colorAccent"
+            app:srcCompat="@android:drawable/ic_menu_agenda" />
+
+        <ListView
                 android:id="@+id/saved_dynamic"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"

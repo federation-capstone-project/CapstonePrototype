@@ -26,7 +26,7 @@ public class Utils {
     }
 
     public static String string_time(String date) {
-        SimpleDateFormat timeFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'");
+        SimpleDateFormat timeFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSXXX");
         DateFormat formatter = new SimpleDateFormat("HH:mm");
         String myTime = null;
         try {
