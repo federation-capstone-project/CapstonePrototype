@@ -66,6 +66,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 
         ContentValues values = new ContentValues();
         // TODO add to DB
+        values.put(KEY_ID, class_event.getId());
         values.put(KEY_CODE, class_event.getCode());
         values.put(KEY_NAME, class_event.getName());
         values.put(KEY_TEACHER_ID, class_event.getTeacherID());

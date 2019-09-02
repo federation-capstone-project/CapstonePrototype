@@ -15,6 +15,7 @@ import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -116,8 +117,9 @@ public class SettingFragment extends Fragment {
                     for (int i = 0; i < jsonObject.length(); i++) {
                         JSONObject object = jsonObject.getJSONObject(i);
                         Log.d(getActivity().getPackageName(), object.getString("event_title"));
-                        db.addClass(new Class(object.getString("course_code"), object.getString("event_title"), object.getInt("event_clinician"), object.getString("clinician_name"), object.getString("event_location"), object.getString("clinician_mac"), object.getString("event_starttime"), object.getString("event_starttime"), object.getString("event_finishtime"), "false"));
+                        db.addClass(new Class(object.getInt("id"),object.getString("course_code"), object.getString("event_title"), object.getInt("event_clinician"), object.getString("clinician_name"), object.getString("event_location"), object.getString("clinician_mac"), object.getString("event_starttime"), object.getString("event_starttime"), object.getString("event_finishtime"), "false"));
                     }
+                    Toast.makeText(getContext(), "Class Sync Complete", Toast.LENGTH_SHORT).show();
                     db.close();
                 } catch (JSONException e) {
                     e.printStackTrace();

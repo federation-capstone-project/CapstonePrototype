@@ -36,11 +36,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         TextView student_name = headerView.findViewById(R.id.tv_student_name);
         TextView student_email = headerView.findViewById(R.id.tv_student_email);
         if(prefs.getString("student_id", "69").equals("1")){
-            student_name.setText("Nathan Blaney");
-            student_email.setText("nathan.blaney@students.federation.edu.au");
-        } else if(prefs.getString("student_id", "69").equals("2")){
             student_name.setText("Nine Hall");
             student_email.setText("nine.hall@students.federation.edu.au");
+        } else if(prefs.getString("student_id", "69").equals("2")){
+            student_name.setText("Nathan Blaney");
+            student_email.setText("nathan.blaney@students.federation.edu.au");
         } else if(prefs.getString("student_id", "69").equals("3")){
             student_name.setText("Lachlan Copsey");
             student_email.setText("lachlan.copsey@students.federation.edu.au");

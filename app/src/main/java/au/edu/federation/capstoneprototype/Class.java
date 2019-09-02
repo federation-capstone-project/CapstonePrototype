@@ -30,18 +30,6 @@ public class Class {
         this.present = present;
     }
 
-    public Class( String code, String name, int teacher_id, String teacher_name, String location, String mac, String date, String start, String finish, String present) {
-        this.code = code;
-        this.name = name;
-        this.teacher_id = teacher_id;
-        this.teacher_name = teacher_name;
-        this.location = location;
-        this.mac = mac;
-        this.date = date;
-        this.start = start;
-        this.finish = finish;
-        this.present = present;
-    }
 
     public String getDate() {
         return date;

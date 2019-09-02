@@ -15,6 +15,7 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AlertDialog;
+import android.text.LoginFilter;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -59,7 +60,7 @@ public class ClassFragment extends Fragment {
     boolean searching = false;
     int REQUEST_ENABLE_BT = 0;
     SharedPreferences prefs;
-    public TextView tvDate;
+    Class current_class;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -88,11 +89,9 @@ public class ClassFragment extends Fragment {
     public void onViewCreated(final View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         //you can set the title for your toolbar here for different fragments different titles
-        getActivity().setTitle("Today");
+        getActivity().setTitle("Today - " + Calendar.getInstance().get(Calendar.DAY_OF_MONTH) + "/" + (Calendar.getInstance().get(Calendar.MONTH) + "/" + (Calendar.getInstance().get(Calendar.YEAR))));
         btAdapter = BluetoothAdapter.getDefaultAdapter();
         final DatabaseHandler db = new DatabaseHandler(getContext());
-        tvDate = view.findViewById(R.id.currentDate);
-        tvDate.setText(Calendar.getInstance().get(Calendar.DAY_OF_MONTH) + "/" + (Calendar.getInstance().get(Calendar.MONTH) + "/" + (Calendar.getInstance().get(Calendar.YEAR))));
         if (btAdapter != null) {
             if (!btAdapter.isEnabled()) {
                 Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
@@ -117,11 +116,9 @@ public class ClassFragment extends Fragment {
             adapter.notifyDataSetChanged();
         }
         saved.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            Class current_class;
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                 current_class = (Class) saved.getItemAtPosition(i);
-
                 if(seen_macs.contains(current_class.getMac())){
                     if (current_class.isPresent().equals("true")) {
                         new AlertDialog.Builder(view.getContext())
@@ -132,6 +129,7 @@ public class ClassFragment extends Fragment {
                                       //  ImageView classStar = getView().findViewById(R.id.class_star);
                                      //   classStar.setVisibility(View.INVISIBLE);
                                         current_class.setPresent("false");
+                                        postRequest(prefs.getString("student_id", "69"), String.valueOf(current_class.getId()), false, false);
                                         adapter.notifyDataSetChanged();
                                     }
                                 })
@@ -149,7 +147,7 @@ public class ClassFragment extends Fragment {
                                         //ImageView classStar = getView().findViewById(R.id.class_star);
                                         //classStar.setVisibility(View.VISIBLE);
                                         current_class.setPresent("true");
-                                        postRequest(prefs.getString("student_id", "69"), current_class.getCode(), true, false);
+                                        postRequest(prefs.getString("student_id", "69"), String.valueOf(current_class.getId()), true, false);
                                         Log.d(getActivity().getPackageName(), "Passed on to postRequest");
                                         adapter.notifyDataSetChanged();
                                     }
@@ -168,6 +166,54 @@ public class ClassFragment extends Fragment {
                 }
             }
         });
+        saved.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+
+
+            @Override
+            public boolean onItemLongClick(AdapterView<?> adapterView, View view, int i, long l) {
+                current_class = (Class) saved.getItemAtPosition(i);
+                if (current_class.isPresent().equals("true")) {
+                    new AlertDialog.Builder(view.getContext())
+                            .setTitle("Check out of class " + current_class.getName())
+                            .setMessage(getString(R.string.class_format_description, current_class.getTeacherName(), current_class.getLocation(), Utils.string_date_full(current_class.getDate())))
+                            .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int which) {
+                                    //  ImageView classStar = getView().findViewById(R.id.class_star);
+                                    //   classStar.setVisibility(View.INVISIBLE);
+                                    current_class.setPresent("false");
+                                    postRequest(prefs.getString("student_id", "69"), String.valueOf(current_class.getId()), false, true);
+                                    adapter.notifyDataSetChanged();
+                                }
+                            })
+
+                            // A null listener allows the button to dismiss the dialog and take no further action.
+                            .setNegativeButton(android.R.string.no, null)
+                            .setIcon(android.R.drawable.ic_dialog_alert)
+                            .show();
+                } else {
+                    new AlertDialog.Builder(view.getContext())
+                            .setTitle("Check into class " + current_class.getName())
+                            .setMessage(getString(R.string.class_format_description, current_class.getTeacherName(), current_class.getLocation(), Utils.string_date_full(current_class.getDate())))
+                            .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int which) {
+                                    //ImageView classStar = getView().findViewById(R.id.class_star);
+                                    //classStar.setVisibility(View.VISIBLE);
+                                    current_class.setPresent("true");
+                                    postRequest(prefs.getString("student_id", "69"), String.valueOf(current_class.getId()), true, true);
+                                    Log.d(getActivity().getPackageName(), "Passed on to postRequest");
+                                    adapter.notifyDataSetChanged();
+                                }
+                            })
+
+                            // A null listener allows the button to dismiss the dialog and take no further action.
+                            .setNegativeButton(android.R.string.no, null)
+                            .setIcon(android.R.drawable.ic_dialog_alert)
+                            .show();
+
+                }
+                return false;
+            }
+        });
         FloatingActionButton addButton = getView().findViewById(R.id.add_beacon);
         addButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -175,8 +221,6 @@ public class ClassFragment extends Fragment {
                 final AlertDialog dialogBuilder = new AlertDialog.Builder(getContext()).create();
                 LayoutInflater inflater = getActivity().getLayoutInflater();
                 View dialogView = inflater.inflate(R.layout.dialog_class_add, null);
-
-                final EditText classID = dialogView.findViewById(R.id.et_class_id);
                 final EditText studentID = dialogView.findViewById(R.id.et_student_id);
                 Button button1 = dialogView.findViewById(R.id.buttonSubmit);
                 Button button2 = dialogView.findViewById(R.id.buttonCancel);
@@ -191,7 +235,7 @@ public class ClassFragment extends Fragment {
                     @Override
                     public void onClick(View view) {
                         dialogBuilder.dismiss();
-                        postRequest(studentID.getText().toString(), classID.getText().toString(), true, true);
+                        //postRequest(studentID.getText().toString(), String.valueOf(current_class.getId()), true, true);
 
                     }
                 });
@@ -215,12 +259,9 @@ public class ClassFragment extends Fragment {
             @Override
             public void run() {
                 //Do something after 20 seconds
-                Log.e("HI","Me" + seen_macs.toString()+ " " + adapter.getCount());
                 for (int i = 0; i < adapter.getCount()  ; i++) {
-                    Log.e("HI","Looking" + adapter.getCount());
                     if (seen_macs.contains(adapter.getItem(i).getMac())){
                         adapter.getItem(i).setCansee(true);
-                        Log.e("HI","found");
                         adapter.notifyDataSetChanged();
                  }
                 }
@@ -293,6 +334,8 @@ public class ClassFragment extends Fragment {
                 postdata.put("event", event);
                 postdata.put("attended", attended);
                 postdata.put("manual", manual);
+                Log.d("lol", postdata.toString());
+                Log.d("lol", event);
             } catch(JSONException e){
                 // TODO Auto-generated catch block
                 e.printStackTrace();
