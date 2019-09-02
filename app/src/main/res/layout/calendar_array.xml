@@ -10,5 +10,5 @@
         android:id="@+id/btnitem"
         android:layout_width="match_parent"
         android:layout_height="90dp"
-        android:text="Button" />
+        android:text="@string/select_date" />
 </LinearLayout>
