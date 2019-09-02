@@ -110,7 +110,7 @@ public class ClassFragment extends Fragment {
         saved.setAdapter(adapter);
         list_classes.clear();
         for (int i = 1; i < db.getAllClasses().size()+1; i++) {
-            Date newDate = Utils.string_date_full(db.getClass(i).getDate());
+            Date newDate = Utils.string_date_full(db.getClass(i).getFinish());
             if (Utils.compareTwoDates(newDate, Calendar.getInstance().getTime())) {
                 Log.e("HI", db.getClass(i).getFinish());
                 if (newDate.after(Calendar.getInstance().getTime())) {
