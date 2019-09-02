@@ -3,6 +3,8 @@ package au.edu.federation.capstoneprototype;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
 import android.text.Editable;
@@ -119,7 +121,12 @@ public class SettingFragment extends Fragment {
                         Log.d(getActivity().getPackageName(), object.getString("event_title"));
                         db.addClass(new Class(object.getInt("id"),object.getString("course_code"), object.getString("event_title"), object.getInt("event_clinician"), object.getString("clinician_name"), object.getString("event_location"), object.getString("clinician_mac"), object.getString("event_starttime"), object.getString("event_starttime"), object.getString("event_finishtime"), "false"));
                     }
-                    Toast.makeText(getContext(), "Class Sync Complete", Toast.LENGTH_SHORT).show();
+                    new Handler(Looper.getMainLooper()).post(new Runnable() {
+                        @Override
+                        public void run() {
+                            Toast.makeText(getContext(), "Class Sync Complete", Toast.LENGTH_SHORT).show();
+                        }
+                    });
                     db.close();
                 } catch (JSONException e) {
                     e.printStackTrace();
