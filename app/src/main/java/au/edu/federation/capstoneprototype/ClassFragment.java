@@ -167,8 +167,6 @@ public class ClassFragment extends Fragment {
             }
         });
         saved.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
-
-
             @Override
             public boolean onItemLongClick(AdapterView<?> adapterView, View view, int i, long l) {
                 current_class = (Class) saved.getItemAtPosition(i);
@@ -212,36 +210,6 @@ public class ClassFragment extends Fragment {
 
                 }
                 return false;
-            }
-        });
-        FloatingActionButton addButton = getView().findViewById(R.id.add_beacon);
-        addButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                final AlertDialog dialogBuilder = new AlertDialog.Builder(getContext()).create();
-                LayoutInflater inflater = getActivity().getLayoutInflater();
-                View dialogView = inflater.inflate(R.layout.dialog_class_add, null);
-                final EditText studentID = dialogView.findViewById(R.id.et_student_id);
-                Button button1 = dialogView.findViewById(R.id.buttonSubmit);
-                Button button2 = dialogView.findViewById(R.id.buttonCancel);
-
-                button2.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        dialogBuilder.dismiss();
-                    }
-                });
-                button1.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        dialogBuilder.dismiss();
-                        //postRequest(studentID.getText().toString(), String.valueOf(current_class.getId()), true, true);
-
-                    }
-                });
-
-                dialogBuilder.setView(dialogView);
-                dialogBuilder.show();
             }
         });
         swipe_view = view.findViewById(R.id.swiperefresh);
