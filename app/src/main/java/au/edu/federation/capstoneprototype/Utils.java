@@ -38,6 +38,8 @@ public class Utils {
         }
         return myTime;
     }
+
+
     public static boolean compareTwoDates(Date startDate, Date endDate) {
         Date sDate = getZeroTimeDate(startDate);
         Date eDate = getZeroTimeDate(endDate);
@@ -45,9 +47,9 @@ public class Utils {
             return false;
         }
         if (sDate.after(eDate)) {
-            return false;
+            return true;
         }
-        return true;
+        return false;
     }
 
     private static Date getZeroTimeDate(Date date) {
