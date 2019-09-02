@@ -111,9 +111,13 @@ public class ClassFragment extends Fragment {
         list_classes.clear();
         for (int i = 1; i < db.getAllClasses().size()+1; i++) {
             Date newDate = Utils.string_date_full(db.getClass(i).getDate());
-            if (Utils.compareTwoDates(newDate, Calendar.getInstance().getTime()))
-                list_classes.add(db.getClass(i));
-            adapter.notifyDataSetChanged();
+            if (Utils.compareTwoDates(newDate, Calendar.getInstance().getTime())) {
+                Log.e("HI", db.getClass(i).getFinish());
+                if (newDate.after(Calendar.getInstance().getTime())) {
+                    list_classes.add(db.getClass(i));
+                    adapter.notifyDataSetChanged();
+               }
+            }
         }
         saved.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override

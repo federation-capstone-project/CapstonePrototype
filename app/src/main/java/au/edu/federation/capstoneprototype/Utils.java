@@ -11,7 +11,8 @@ import java.util.Date;
 public class Utils {
 
     public static Date string_date_full(String date) {
-        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+      //  SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ");
         Date myDate = null;
         try {
             myDate = dateFormat.parse(date);
