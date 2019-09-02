@@ -231,11 +231,11 @@ public class ClassFragment extends Fragment {
             @Override
             public void run() {
                 //Do something after 20 seconds
-                for (int i = 0; i < adapter.getCount()  ; i++) {
-                    if (seen_macs.contains(adapter.getItem(i).getMac())){
-                        adapter.getItem(i).setCansee(true);
+               // for (int i = 0; i < adapter.getCount()  ; i++) {
+                    if (seen_macs.contains(adapter.getItem(1).getMac())){
+                        adapter.getItem(1).setCansee(true);
                         adapter.notifyDataSetChanged();
-                 }
+                 //}
                 }
                 handler.postDelayed(this, 5000);
             }
