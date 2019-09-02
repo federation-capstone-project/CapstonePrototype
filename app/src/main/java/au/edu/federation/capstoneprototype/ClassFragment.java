@@ -266,6 +266,7 @@ public class ClassFragment extends Fragment {
             } else if (BluetoothAdapter.ACTION_DISCOVERY_FINISHED.equals(action)) {
                 Log.d(getActivity().getPackageName(), "Discovery Finished");
                 Toast.makeText(getContext(), "Searching Finished", Toast.LENGTH_SHORT).show();
+                swipe_view.setRefreshing(false);
                 searching = false;
             }
         }
