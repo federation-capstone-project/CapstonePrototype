@@ -37,6 +37,9 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 
@@ -118,6 +121,14 @@ public class ClassFragment extends Fragment {
                     adapter.notifyDataSetChanged();
                }
             }
+            Collections.sort(list_classes, new Comparator<Class>() {
+                @Override
+                public int compare(Class o1, Class o2) {
+                 return    o1.getComp_date().compareTo(o2.getComp_date());
+                }
+
+            });
+            adapter.notifyDataSetChanged();
         }
         saved.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -232,10 +243,13 @@ public class ClassFragment extends Fragment {
             public void run() {
                 //Do something after 20 seconds
                // for (int i = 0; i < adapter.getCount()  ; i++) {
-                    if (seen_macs.contains(adapter.getItem(1).getMac())){
+                if (adapter.getCount() > 0) {
+                    if (seen_macs.contains(adapter.getItem(1).getMac())) {
                         adapter.getItem(1).setCansee(true);
                         adapter.notifyDataSetChanged();
-                 //}
+                        //}
+
+                    }
                 }
                 handler.postDelayed(this, 5000);
             }

@@ -1,5 +1,7 @@
 package au.edu.federation.capstoneprototype;
 
+import java.util.Date;
+
 public class Class {
 
     private int id;
@@ -14,6 +16,7 @@ public class Class {
     private String finish; //
     private String present;
     private boolean cansee;
+    private Date comp_date;
 
     public Class(){   }
     public Class(int id, String code, String name, int teacher_id, String teacher_name, String location, String mac, String date, String start, String finish, String present) {
@@ -28,8 +31,11 @@ public class Class {
         this.start = start;
         this.finish = finish;
         this.present = present;
+        comp_date = Utils.string_date_full(start);
+
     }
 
+    public Date getComp_date(){return comp_date;}
 
     public String getDate() {
         return date;
@@ -123,4 +129,7 @@ public class Class {
     public boolean canSee(){return cansee;}
 
     public void setCansee(Boolean cansee) {this.cansee = cansee;}
+
+
+
 }
