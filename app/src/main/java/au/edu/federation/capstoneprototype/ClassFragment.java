@@ -94,7 +94,7 @@ public class ClassFragment extends Fragment {
         //you can set the title for your toolbar here for different fragments different titles
         getActivity().setTitle("Today - " + Calendar.getInstance().get(Calendar.DAY_OF_MONTH) + "/" + (Calendar.getInstance().get(Calendar.MONTH) + "/" + (Calendar.getInstance().get(Calendar.YEAR))));
         btAdapter = BluetoothAdapter.getDefaultAdapter();
-        final DatabaseHandler db = new DatabaseHandler(getContext());
+        DatabaseHandler db = new DatabaseHandler(getContext());
         if (btAdapter != null) {
             if (!btAdapter.isEnabled()) {
                 Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
@@ -112,12 +112,12 @@ public class ClassFragment extends Fragment {
         saved = getView().findViewById(R.id.saved_dynamic);
         saved.setAdapter(adapter);
         list_classes.clear();
-        for (int i = 1; i < db.getAllClasses().size()+1; i++) {
-            Date newDate = Utils.string_date_full(db.getClass(i).getFinish());
+        for (Class cc : db.getAllClasses()) {
+            Date newDate = Utils.string_date_full(cc.getFinish());
             if (Utils.compareTwoDates(newDate, Calendar.getInstance().getTime())) {
-                Log.e("HI", db.getClass(i).getFinish());
+                Log.e("HI", cc.getFinish());
                 if (newDate.after(Calendar.getInstance().getTime())) {
-                    list_classes.add(db.getClass(i));
+                    list_classes.add(cc);
                     adapter.notifyDataSetChanged();
                }
             }
