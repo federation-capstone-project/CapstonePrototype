@@ -124,7 +124,7 @@ public class ClassFragment extends Fragment {
             Collections.sort(list_classes, new Comparator<Class>() {
                 @Override
                 public int compare(Class o1, Class o2) {
-                 return    o1.getComp_date().compareTo(o2.getComp_date());
+                 return    o1.getStart().compareTo(o2.getStart());
                 }
 
             });
@@ -240,13 +240,14 @@ public class ClassFragment extends Fragment {
         final Handler handler = new Handler();
         handler.postDelayed(new Runnable() {
             @Override
-            public void run() {
+            public void run() {Log.e("HI", adapter.getItem(0).getName());
                 //Do something after 20 seconds
                // for (int i = 0; i < adapter.getCount()  ; i++) {
                 if (adapter.getCount() > 0) {
-                    if (seen_macs.contains(adapter.getItem(1).getMac())) {
+                    if (seen_macs.contains(adapter.getItem(0).getMac())) {
                         adapter.getItem(1).setCansee(true);
                         adapter.notifyDataSetChanged();
+                        Log.e("HI", adapter.getItem(0).getName());
                         //}
 
                     }
