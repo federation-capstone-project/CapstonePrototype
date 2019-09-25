@@ -131,20 +131,16 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     // Deleting single contact
     public void deleteClass(Class class_event) {
         SQLiteDatabase db = this.getWritableDatabase();
-        db.delete(TABLE_CLASSES, KEY_ID + " = ?",
-                new String[] { String.valueOf(class_event.getId()) });
+        db.delete(TABLE_CLASSES, KEY_ID + " = ?",new String[] { String.valueOf(class_event.getId()) });
         db.close();
     }
-
-    // Getting contacts Count
-    public int getContactsCount() {
-        String countQuery = "SELECT  * FROM " + TABLE_CLASSES;
-        SQLiteDatabase db = this.getReadableDatabase();
-        Cursor cursor = db.rawQuery(countQuery, null);
-        cursor.close();
-
-        // return count
-        return cursor.getCount();
+    // Deleting single contact
+    public void updateClassPresence(Class class_event) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues cv = new ContentValues();
+        cv.put(KEY_PRESENT, "true");
+        db.update(TABLE_CLASSES, cv,KEY_ID + " = ?", new String[] { String.valueOf(class_event.getId()) });
+        db.close();
     }
 
 }

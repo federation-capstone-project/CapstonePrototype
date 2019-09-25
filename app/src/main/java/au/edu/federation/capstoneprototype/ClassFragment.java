@@ -64,6 +64,7 @@ public class ClassFragment extends Fragment {
     int REQUEST_ENABLE_BT = 0;
     SharedPreferences prefs;
     Class current_class;
+    DatabaseHandler db;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -94,7 +95,7 @@ public class ClassFragment extends Fragment {
         //you can set the title for your toolbar here for different fragments different titles
         getActivity().setTitle("Today - " + Calendar.getInstance().get(Calendar.DAY_OF_MONTH) + "/" + (Calendar.getInstance().get(Calendar.MONTH) + "/" + (Calendar.getInstance().get(Calendar.YEAR))));
         btAdapter = BluetoothAdapter.getDefaultAdapter();
-        DatabaseHandler db = new DatabaseHandler(getContext());
+        db = new DatabaseHandler(getContext());
         if (btAdapter != null) {
             if (!btAdapter.isEnabled()) {
                 Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
@@ -115,7 +116,6 @@ public class ClassFragment extends Fragment {
         for (Class cc : db.getAllClasses()) {
             Date newDate = Utils.string_date_full(cc.getFinish());
             if (Utils.compareTwoDates(newDate, Calendar.getInstance().getTime())) {
-                Log.e("HI", cc.getFinish());
                 if (newDate.after(Calendar.getInstance().getTime())) {
                     list_classes.add(cc);
                     adapter.notifyDataSetChanged();
@@ -162,6 +162,7 @@ public class ClassFragment extends Fragment {
                                         //ImageView classStar = getView().findViewById(R.id.class_star);
                                         //classStar.setVisibility(View.VISIBLE);
                                         current_class.setPresent("true");
+                                        db.updateClassPresence(current_class);
                                         postRequest(prefs.getString("student_id", "69"), String.valueOf(current_class.getId()), true, false);
                                         Log.d(getActivity().getPackageName(), "Passed on to postRequest");
                                         adapter.notifyDataSetChanged();
@@ -212,6 +213,7 @@ public class ClassFragment extends Fragment {
                                     //ImageView classStar = getView().findViewById(R.id.class_star);
                                     //classStar.setVisibility(View.VISIBLE);
                                     current_class.setPresent("true");
+                                    db.updateClassPresence(current_class);
                                     postRequest(prefs.getString("student_id", "69"), String.valueOf(current_class.getId()), true, true);
                                     Log.d(getActivity().getPackageName(), "Passed on to postRequest");
                                     adapter.notifyDataSetChanged();
@@ -240,7 +242,7 @@ public class ClassFragment extends Fragment {
         final Handler handler = new Handler();
         handler.postDelayed(new Runnable() {
             @Override
-            public void run() {Log.e("HI", adapter.getItem(0).getName());
+            public void run() {
                 //Do something after 20 seconds
                // for (int i = 0; i < adapter.getCount()  ; i++) {
                 if (adapter.getCount() > 0) {

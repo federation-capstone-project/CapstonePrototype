@@ -107,6 +107,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             case R.id.nav_schedule:
                 fragment = new ClassScheduleFragment();
                 break;
+            case R.id.nav_history:
+                fragment = new HistoryFragment();
+                break;
         }
 
         //replacing the fragment

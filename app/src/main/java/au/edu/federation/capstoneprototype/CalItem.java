@@ -9,6 +9,16 @@ public class CalItem {
     public String ClassLocation;
     public String ClassTime;
 
+    public String getClassPresence() {
+        return ClassPresence;
+    }
+
+    public void setClassPresence(String classPresence) {
+        ClassPresence = classPresence;
+    }
+
+    public String ClassPresence;
+
     public String getClassName() {
         return ClassName;
     }
@@ -31,12 +41,13 @@ public class CalItem {
 
     public Date ClassDateTime;
 
-    public CalItem(String name, String clin, String loc, String time,Date date){
+    public CalItem(String name, String clin, String loc, String time,Date date, String presence){
         this.ClassName = name;
         this.ClassClin = clin;
         this.ClassLocation = loc;
         this.ClassTime = time;
         this.ClassDateTime = date;
+        this.ClassPresence = presence;
 
     }
 }
