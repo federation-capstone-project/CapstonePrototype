@@ -3,9 +3,9 @@ package au.edu.federation.capstoneprototype;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
-import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -16,18 +16,18 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
 
-public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener{
+public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
     SharedPreferences prefs;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         prefs = this.getSharedPreferences("prefs", Context.MODE_PRIVATE);
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
-                this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+        DrawerLayout drawer = findViewById(R.id.drawer_layout);
+        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.addDrawerListener(toggle);
         toggle.syncState();
 
@@ -35,24 +35,15 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         View headerView = navigationView.getHeaderView(0);
         TextView student_name = headerView.findViewById(R.id.tv_student_name);
         TextView student_email = headerView.findViewById(R.id.tv_student_email);
-        if(prefs.getString("student_id", "69").equals("3")){
-            student_name.setText("Nine Hall");
-            student_email.setText("nine.hall@students.federation.edu.au");
-        } else if(prefs.getString("student_id", "69").equals("2")){
-            student_name.setText("Nathan Blaney");
-            student_email.setText("nathan.blaney@students.federation.edu.au");
-        } else if(prefs.getString("student_id", "69").equals("1")){
-            student_name.setText("Lachlan Copsey");
-            student_email.setText("lachlan.copsey@students.federation.edu.au");
-        }
+        student_name.setText(prefs.getString("student_name", "Test Student"));
+        student_email.setText(prefs.getString("student_email", "student@test.com"));
         navigationView.setNavigationItemSelectedListener(this);
-
         displaySelectedScreen(R.id.nav_class);
     }
 
     @Override
     public void onBackPressed() {
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        DrawerLayout drawer = findViewById(R.id.drawer_layout);
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
         } else {
@@ -91,6 +82,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         displaySelectedScreen(item.getItemId());
         return true;
     }
+
     private void displaySelectedScreen(int itemId) {
 
         //creating fragment object
@@ -119,7 +111,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             ft.commit();
         }
 
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        DrawerLayout drawer = findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
     }
 }

@@ -13,16 +13,10 @@ import android.widget.DatePicker;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import java.text.DateFormat;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.List;
-import java.util.Locale;
-import java.util.TimeZone;
 
 import static au.edu.federation.capstoneprototype.Utils.compareTwoDates;
 
@@ -83,7 +77,7 @@ public class HistoryFragment extends Fragment {
         adapter.clear();
         for (int i = 0; i < sss.size(); i++) {
             if (compareTwoDates(sss.get(i).getClassDateTime(), (Calendar.getInstance().getTime()))) {
-                if(sss.get(i).getClassPresence().equalsIgnoreCase("true")){
+                if (sss.get(i).getClassPresence().equalsIgnoreCase("true")) {
                     adapter.add(sss.get(i));
                 }
 
@@ -107,7 +101,7 @@ public class HistoryFragment extends Fragment {
                         adapter.clear();
                         for (int i = 0; i < sss.size(); i++) {
                             if (compareTwoDates(sss.get(i).getClassDateTime(), (calendar.getTime()))) {
-                                if(sss.get(i).getClassPresence().equalsIgnoreCase("true")){
+                                if (sss.get(i).getClassPresence().equalsIgnoreCase("true")) {
                                     adapter.add(sss.get(i));
                                 }
                             }

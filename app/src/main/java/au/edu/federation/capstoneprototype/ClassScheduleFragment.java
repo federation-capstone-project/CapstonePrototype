@@ -13,24 +13,15 @@ import android.widget.DatePicker;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import java.text.DateFormat;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.List;
-import java.util.Locale;
-import java.util.TimeZone;
 
 import static au.edu.federation.capstoneprototype.Utils.compareTwoDates;
 
 public class ClassScheduleFragment extends Fragment {
 
-    public LocalDateTime s;
     public ArrayList<CalItem> sss;
-    ListView list;
     ArrayList<CalItem> arrayList;
     CalendarList adapter;
     CalItem newCal;
@@ -43,12 +34,12 @@ public class ClassScheduleFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_class_schedule, container, false);
         DatabaseHandler db = new DatabaseHandler(getContext());
-        arrayList = new ArrayList<CalItem>();
+        arrayList = new ArrayList<>();
         adapter = new CalendarList(getContext(), arrayList);
         ListView a = view.findViewById(R.id.lol);
         a.setAdapter(adapter);
         newCal = null;
-        sss = new ArrayList<CalItem>();
+        sss = new ArrayList<>();
         // Reading all classes
         Log.d("Reading: ", "Reading all classes");
         List<Class> classes = db.getAllClasses();

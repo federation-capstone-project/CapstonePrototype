@@ -1,7 +1,5 @@
 package au.edu.federation.capstoneprototype;
 
-import android.util.Log;
-
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -11,7 +9,7 @@ import java.util.Date;
 public class Utils {
 
     public static Date string_date_full(String date) {
-      //  SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        //  SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ");
         Date myDate = null;
         try {
@@ -47,10 +45,7 @@ public class Utils {
         if (sDate.before(eDate)) {
             return false;
         }
-        if (sDate.after(eDate)) {
-            return false;
-        }
-        return true;
+        return !sDate.after(eDate);
     }
 
     private static Date getZeroTimeDate(Date date) {

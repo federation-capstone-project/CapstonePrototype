@@ -5,6 +5,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -22,7 +23,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     private static final String KEY_MAC = "mac";
     private static final String KEY_DATE = "date";
     private static final String KEY_START = "start";
-    private static final String KEY_FINISH= "finish";
+    private static final String KEY_FINISH = "finish";
     private static final String KEY_PRESENT = "present";
 
     public DatabaseHandler(Context context) {
@@ -87,7 +88,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     // code to get the single
     Class getClass(int id) {
         SQLiteDatabase db = this.getReadableDatabase();
-        Cursor cursor = db.query(TABLE_CLASSES, new String[] { KEY_ID, KEY_CODE, KEY_NAME, KEY_TEACHER_ID, KEY_TEACHER_NAME, KEY_LOCATION, KEY_MAC, KEY_DATE, KEY_START, KEY_FINISH, KEY_PRESENT }, KEY_ID + "=?", new String[] { String.valueOf(id) }, null, null, null, null);
+        Cursor cursor = db.query(TABLE_CLASSES, new String[]{KEY_ID, KEY_CODE, KEY_NAME, KEY_TEACHER_ID, KEY_TEACHER_NAME, KEY_LOCATION, KEY_MAC, KEY_DATE, KEY_START, KEY_FINISH, KEY_PRESENT}, KEY_ID + "=?", new String[]{String.valueOf(id)}, null, null, null, null);
         if (cursor != null)
             cursor.moveToFirst();
 
@@ -131,15 +132,16 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     // Deleting single contact
     public void deleteClass(Class class_event) {
         SQLiteDatabase db = this.getWritableDatabase();
-        db.delete(TABLE_CLASSES, KEY_ID + " = ?",new String[] { String.valueOf(class_event.getId()) });
+        db.delete(TABLE_CLASSES, KEY_ID + " = ?", new String[]{String.valueOf(class_event.getId())});
         db.close();
     }
+
     // Deleting single contact
     public void updateClassPresence(Class class_event) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues cv = new ContentValues();
         cv.put(KEY_PRESENT, "true");
-        db.update(TABLE_CLASSES, cv,KEY_ID + " = ?", new String[] { String.valueOf(class_event.getId()) });
+        db.update(TABLE_CLASSES, cv, KEY_ID + " = ?", new String[]{String.valueOf(class_event.getId())});
         db.close();
     }
 

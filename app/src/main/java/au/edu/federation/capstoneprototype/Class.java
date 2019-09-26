@@ -18,7 +18,9 @@ public class Class {
     private boolean cansee;
     private Date comp_date;
 
-    public Class(){   }
+    public Class() {
+    }
+
     public Class(int id, String code, String name, int teacher_id, String teacher_name, String location, String mac, String date, String start, String finish, String present) {
         this.id = id;
         this.code = code;
@@ -35,7 +37,9 @@ public class Class {
 
     }
 
-    public Date getComp_date(){return comp_date;}
+    public Date getComp_date() {
+        return comp_date;
+    }
 
     public String getDate() {
         return date;
@@ -77,12 +81,12 @@ public class Class {
         this.teacher_id = teacher_id;
     }
 
-    public void setTeacherName(String teacher_name) {
-        this.teacher_name = teacher_name;
-    }
-
     public String getTeacherName() {
         return teacher_name;
+    }
+
+    public void setTeacherName(String teacher_name) {
+        this.teacher_name = teacher_name;
     }
 
     public String getLocation() {
@@ -126,10 +130,13 @@ public class Class {
         this.present = present;
     }
 
-    public boolean canSee(){return cansee;}
+    public boolean canSee() {
+        return cansee;
+    }
 
-    public void setCansee(Boolean cansee) {this.cansee = cansee;}
-
+    public void setCansee(Boolean cansee) {
+        this.cansee = cansee;
+    }
 
 
 }

@@ -5,7 +5,6 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
-import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -28,12 +27,9 @@ import java.io.IOException;
 import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.Credentials;
-import okhttp3.MediaType;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
-import okhttp3.RequestBody;
 import okhttp3.Response;
-import okhttp3.internal.http.HttpHeaders;
 
 
 public class SettingFragment extends Fragment {
@@ -42,6 +38,7 @@ public class SettingFragment extends Fragment {
     CheckBox bluetooth_auto;
     Button sync_classes;
     DatabaseHandler db;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         prefs = getActivity().getSharedPreferences("prefs", Context.MODE_PRIVATE);
@@ -58,23 +55,25 @@ public class SettingFragment extends Fragment {
         student_id = view.findViewById(R.id.et_student_id);
         bluetooth_auto = view.findViewById(R.id.cb_bluetooth_auto);
         sync_classes = view.findViewById(R.id.btn_sync_classes);
-        student_id.setText(prefs.getString("student_id", "69"));
+        student_id.setText(prefs.getString("student_id", "Not Set"));
         bluetooth_auto.setChecked(prefs.getBoolean("bluetooth_auto", true));
         student_id.addTextChangedListener(new TextWatcher() {
             public void afterTextChanged(Editable s) {
                 prefs.edit().putString("student_id", s.toString()).apply();
             }
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) { }
-            public void onTextChanged(CharSequence s, int start, int before, int count) { }
+
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            }
+
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+            }
         });
-        bluetooth_auto.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener()
-        {
+        bluetooth_auto.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked)
-            {
-                if(bluetooth_auto.isChecked()) {
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if (bluetooth_auto.isChecked()) {
                     prefs.edit().putBoolean("bluetooth_auto", true).apply();
-                }else{
+                } else {
                     prefs.edit().putBoolean("bluetooth_auto", false).apply();
                 }
 
@@ -88,8 +87,9 @@ public class SettingFragment extends Fragment {
             }
         });
     }
+
     public void getStudentClasses() {
-        String url = String.format("https://capstone.blny.me/myevents/%s/?format=json", prefs.getString("student_id", "69" ));
+        String url = String.format("https://capstone.blny.me/myevents/%s/?format=json", prefs.getString("student_id", "69"));
         OkHttpClient client = new OkHttpClient();
 
         String credentials = Credentials.basic("administrator", "PotatoPancake1");
@@ -119,7 +119,7 @@ public class SettingFragment extends Fragment {
                     for (int i = 0; i < jsonObject.length(); i++) {
                         JSONObject object = jsonObject.getJSONObject(i);
                         Log.d(getActivity().getPackageName(), object.getString("event_title"));
-                        db.addClass(new Class(object.getInt("id"),object.getString("course_code"), object.getString("event_title"), object.getInt("event_clinician"), object.getString("clinician_name"), object.getString("event_location"), object.getString("clinician_mac"), object.getString("event_starttime"), object.getString("event_starttime"), object.getString("event_finishtime"), "false"));
+                        db.addClass(new Class(object.getInt("id"), object.getString("course_code"), object.getString("event_title"), object.getInt("event_clinician"), object.getString("clinician_name"), object.getString("event_location"), object.getString("clinician_mac"), object.getString("event_starttime"), object.getString("event_starttime"), object.getString("event_finishtime"), "false"));
                     }
                     new Handler(Looper.getMainLooper()).post(new Runnable() {
                         @Override

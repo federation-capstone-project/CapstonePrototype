@@ -1,6 +1,5 @@
 package au.edu.federation.capstoneprototype;
 
-import java.time.*;
 import java.util.Date;
 
 public class CalItem {
@@ -8,6 +7,18 @@ public class CalItem {
     public String ClassClin;
     public String ClassLocation;
     public String ClassTime;
+    public String ClassPresence;
+    public Date ClassDateTime;
+
+    public CalItem(String name, String clin, String loc, String time, Date date, String presence) {
+        this.ClassName = name;
+        this.ClassClin = clin;
+        this.ClassLocation = loc;
+        this.ClassTime = time;
+        this.ClassDateTime = date;
+        this.ClassPresence = presence;
+
+    }
 
     public String getClassPresence() {
         return ClassPresence;
@@ -16,8 +27,6 @@ public class CalItem {
     public void setClassPresence(String classPresence) {
         ClassPresence = classPresence;
     }
-
-    public String ClassPresence;
 
     public String getClassName() {
         return ClassName;
@@ -37,17 +46,5 @@ public class CalItem {
 
     public Date getClassDateTime() {
         return ClassDateTime;
-    }
-
-    public Date ClassDateTime;
-
-    public CalItem(String name, String clin, String loc, String time,Date date, String presence){
-        this.ClassName = name;
-        this.ClassClin = clin;
-        this.ClassLocation = loc;
-        this.ClassTime = time;
-        this.ClassDateTime = date;
-        this.ClassPresence = presence;
-
     }
 }
