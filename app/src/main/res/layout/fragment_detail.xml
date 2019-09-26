@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".SettingFragment">
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical" >
+
+            <TextView
+                android:id="@+id/lbl_student_id"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/student_id"
+                android:textAlignment="center"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/tv_student_id"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="1"
+                android:textAlignment="center" />
+
+            <TextView
+                android:id="@+id/lbl_student_name"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/name"
+                android:textAlignment="center"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/tv_student_name"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Test Student"
+                android:textAlignment="center" />
+
+            <TextView
+                android:id="@+id/lbl_student_email"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/email"
+                android:textAlignment="center"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/tv_student_email"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="student@test.com"
+                android:textAlignment="center" />
+
+            <TextView
+                android:id="@+id/lbl_student_percentage"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/class_percentage"
+                android:textAlignment="center"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/tv_student_percentage"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="99%"
+                android:textAlignment="center" />
+        </LinearLayout>
+    </ScrollView>
+</FrameLayout>
