@@ -1,10 +1,15 @@
 package au.edu.federation.capstoneprototype;
 
+import android.app.Application;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
+import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
+import android.provider.Settings;
 import android.support.v4.app.Fragment;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -16,6 +21,7 @@ import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import org.json.JSONArray;
@@ -38,6 +44,10 @@ public class SettingFragment extends Fragment {
     CheckBox bluetooth_auto;
     Button sync_classes;
     DatabaseHandler db;
+    Button notification_settings_button,logout_button;
+    Context context;
+    String manufacturer,model,phone_name;
+    TextView manufacturer_textview,model_textview,phone_name_textview,db_connection;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -57,6 +67,19 @@ public class SettingFragment extends Fragment {
         sync_classes = view.findViewById(R.id.btn_sync_classes);
         student_id.setText(prefs.getString("student_id", "Not Set"));
         bluetooth_auto.setChecked(prefs.getBoolean("bluetooth_auto", true));
+
+        context = getContext();
+manufacturer_textview = view.findViewById(R.id.tv_manu);
+model_textview = view.findViewById(R.id.tv_model);
+phone_name_textview = view.findViewById(R.id.tv_phone_name);
+model_textview.setText(Build.MODEL);
+phone_name_textview.setText(Settings.Secure.getString(context.getContentResolver(), "bluetooth_name"));
+manufacturer_textview.setText(Build.MANUFACTURER);
+logout_button = view.findViewById(R.id.btn_logout);
+        notification_settings_button = view.findViewById(R.id.btn_android_notification);
+        db_connection = view.findViewById(R.id.tv_connection);
+
+
         student_id.addTextChangedListener(new TextWatcher() {
             public void afterTextChanged(Editable s) {
                 prefs.edit().putString("student_id", s.toString()).apply();
@@ -86,6 +109,32 @@ public class SettingFragment extends Fragment {
                 getStudentClasses();
             }
         });
+        notification_settings_button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent();
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                    intent.setAction(Settings.ACTION_APP_NOTIFICATION_SETTINGS);
+                    intent.putExtra(Settings.EXTRA_APP_PACKAGE, context.getPackageName());
+                } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP){
+                    intent.setAction("android.settings.APP_NOTIFICATION_SETTINGS");
+                    intent.putExtra("app_package", context.getPackageName());
+                    intent.putExtra("app_uid", context.getApplicationInfo().uid);
+                } else {
+                    intent.setAction(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
+                    intent.addCategory(Intent.CATEGORY_DEFAULT);
+                    intent.setData(Uri.parse("package:" + context.getPackageName()));
+                }
+                context.startActivity(intent);
+            }
+        });
+        logout_button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+context.deleteDatabase("studentClasses");
+            }
+        });
+
     }
 
     public void getStudentClasses() {
@@ -107,6 +156,7 @@ public class SettingFragment extends Fragment {
                 Log.d(getActivity().getPackageName(), mMessage);
                 Log.d(getActivity().getPackageName(), "OnFailure");
                 //call.cancel();
+                db_connection.setText("Datebase Connection: False");
             }
 
             @Override
@@ -128,6 +178,7 @@ public class SettingFragment extends Fragment {
                         }
                     });
                     db.close();
+db_connection.setText("Datebase Connection: True");
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }

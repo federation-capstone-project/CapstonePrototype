@@ -2,6 +2,8 @@ package au.edu.federation.capstoneprototype;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
@@ -15,6 +17,9 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
+import android.widget.Toast;
+
+import java.net.InetAddress;
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
     SharedPreferences prefs;
@@ -39,6 +44,13 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         student_email.setText(prefs.getString("student_email", "student@test.com"));
         navigationView.setNavigationItemSelectedListener(this);
         displaySelectedScreen(R.id.nav_class);
+
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        OnlineCheck();
     }
 
     @Override
@@ -117,4 +129,29 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
     }
-}
+
+    public void OnlineCheck()
+    {
+        boolean isonline;
+        Context context = getApplicationContext();
+        ConnectivityManager cm =
+                (ConnectivityManager)context.getSystemService(Context.CONNECTIVITY_SERVICE);
+
+        NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
+        boolean isConnected = activeNetwork != null &&
+                activeNetwork.isConnectedOrConnecting();
+        isonline = isConnected;
+        if (isConnected == false) {
+
+
+            CharSequence text = "No Connection";
+            int duration = Toast.LENGTH_LONG;
+
+            Toast toast = Toast.makeText(context, text, duration);
+            toast.show();
+        }
+        }
+
+
+    }
+
