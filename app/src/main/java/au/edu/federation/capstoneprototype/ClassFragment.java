@@ -317,7 +317,8 @@ public class ClassFragment extends Fragment {
                 .url(url)
                 .post(body)
                 .header("Content-Type", "application/json")
-                .header("Authorization", credentials)
+                //.header("Authorization", credentials)
+                .header("Authorization", "Token 097d27d467895f9758bb5fb53e267e52e08b4526")
                 .build();
 
         client.newCall(request).enqueue(new Callback() {
