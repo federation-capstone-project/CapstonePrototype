@@ -134,6 +134,9 @@ public class SettingFragment extends Fragment {
             public void onClick(View v) {
                 context.deleteDatabase("studentClasses");
                 prefs.edit().clear().apply();
+                Intent myIntent = new Intent(getContext(), LoginActivity.class);
+                startActivity(myIntent);
+                getActivity().finish();
             }
         });
 

@@ -1,6 +1,7 @@
 package au.edu.federation.capstoneprototype;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
@@ -30,14 +31,13 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         setContentView(R.layout.activity_main);
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        prefs = this.getSharedPreferences("prefs", Context.MODE_PRIVATE);
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.addDrawerListener(toggle);
         toggle.syncState();
-
         NavigationView navigationView = findViewById(R.id.nav_view);
         View headerView = navigationView.getHeaderView(0);
+        prefs = this.getSharedPreferences("prefs",Context.MODE_PRIVATE);
         TextView student_name = headerView.findViewById(R.id.tv_student_name);
         TextView student_email = headerView.findViewById(R.id.tv_student_email);
         student_name.setText(prefs.getString("student_name", "Test Student"));
