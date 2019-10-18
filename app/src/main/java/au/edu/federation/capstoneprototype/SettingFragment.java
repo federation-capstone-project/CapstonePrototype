@@ -78,7 +78,7 @@ public class SettingFragment extends Fragment {
         logout_button = view.findViewById(R.id.btn_logout);
         notification_settings_button = view.findViewById(R.id.btn_android_notification);
         db_connection = view.findViewById(R.id.tv_connection);
-
+db_connection.setText("Connection: " + MainActivity.instance.canConnect);
 
         student_id.addTextChangedListener(new TextWatcher() {
             public void afterTextChanged(Editable s) {
@@ -161,7 +161,7 @@ public class SettingFragment extends Fragment {
                 Log.d(getActivity().getPackageName(), mMessage);
                 Log.d(getActivity().getPackageName(), "OnFailure");
                 //call.cancel();
-                db_connection.setText("Datebase Connection: False");
+
             }
 
             @Override
@@ -183,7 +183,7 @@ public class SettingFragment extends Fragment {
                         }
                     });
                     db.close();
-                    db_connection.setText("Datebase Connection: True");
+
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
