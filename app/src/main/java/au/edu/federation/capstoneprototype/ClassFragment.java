@@ -26,6 +26,8 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
+import java.net.URL;
+import java.net.URLConnection;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
@@ -51,6 +53,7 @@ public class ClassFragment extends Fragment {
     ListView saved;
     SwipeRefreshLayout swipe_view;
     boolean searching = false;
+    public boolean ServerConnected;
     /**
      * Handles the ACTION_FOUND from the Device Discovery process
      *
@@ -283,6 +286,30 @@ public class ClassFragment extends Fragment {
 
         }
     }
+   /* public boolean isConnectedToServer(String url, int timeout) {
+
+        Runtime runtime = Runtime.getRuntime();
+        Process proc = null; //<- Try ping -c 1 www.serverURL.com
+        try {
+            proc = runtime.exec("ping www.google.com");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        int mPingResult = 0;
+        try {
+            mPingResult = proc .waitFor();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        if(mPingResult == 0){
+            Log.e("S","SS");
+            return true;
+        }else{
+            Log.e("S","SSGG");
+            return false;
+        }
+    }*/
+
 
     /**
      * Handles the communication with the Django framework
