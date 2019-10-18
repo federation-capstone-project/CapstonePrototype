@@ -64,21 +64,21 @@ public class SettingFragment extends Fragment {
         db = new DatabaseHandler(getContext());
         student_id = view.findViewById(R.id.et_student_id);
         bluetooth_auto = view.findViewById(R.id.cb_bluetooth_auto);
-        sync_classes = view.findViewById(R.id.btn_sync_classes);
+        sync_classes = view.findViewById(R.id.btn_redownload_data);
         student_id.setText(prefs.getString("student_id", "Not Set"));
         bluetooth_auto.setChecked(prefs.getBoolean("bluetooth_auto", true));
 
         context = getContext();
-manufacturer_textview = view.findViewById(R.id.tv_manu);
-model_textview = view.findViewById(R.id.tv_model);
-phone_name_textview = view.findViewById(R.id.tv_phone_name);
-model_textview.setText(Build.MODEL);
-phone_name_textview.setText(Settings.Secure.getString(context.getContentResolver(), "bluetooth_name"));
-manufacturer_textview.setText(Build.MANUFACTURER);
-logout_button = view.findViewById(R.id.btn_logout);
+        manufacturer_textview = view.findViewById(R.id.tv_manu);
+        model_textview = view.findViewById(R.id.tv_model);
+        phone_name_textview = view.findViewById(R.id.tv_phone_name);
+        model_textview.setText(Build.MODEL);
+        phone_name_textview.setText(Settings.Secure.getString(context.getContentResolver(), "bluetooth_name"));
+        manufacturer_textview.setText(Build.MANUFACTURER);
+        logout_button = view.findViewById(R.id.btn_logout);
         notification_settings_button = view.findViewById(R.id.btn_android_notification);
         db_connection = view.findViewById(R.id.tv_connection);
-db_connection.setText("Connection: " + MainActivity.instance.canConnect);
+
 
         student_id.addTextChangedListener(new TextWatcher() {
             public void afterTextChanged(Editable s) {
@@ -107,6 +107,7 @@ db_connection.setText("Connection: " + MainActivity.instance.canConnect);
             public void onClick(View v) {
                 getContext().deleteDatabase("studentClasses");
                 getStudentClasses();
+                getStudentInfo();
             }
         });
         notification_settings_button.setOnClickListener(new View.OnClickListener() {
@@ -131,22 +132,26 @@ db_connection.setText("Connection: " + MainActivity.instance.canConnect);
         logout_button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-context.deleteDatabase("studentClasses");
+                context.deleteDatabase("studentClasses");
+                prefs.edit().clear().apply();
+                Intent myIntent = new Intent(getContext(), LoginActivity.class);
+                startActivity(myIntent);
+                getActivity().finish();
             }
         });
 
     }
 
     public void getStudentClasses() {
-        String url = String.format("https://capstone.blny.me/myevents/%s/?format=json", prefs.getString("student_id", "69"));
+        String url = String.format("https://capstone.blny.me/myevents/?format=json", prefs.getString("student_id", "69"));
         OkHttpClient client = new OkHttpClient();
 
         String credentials = Credentials.basic("administrator", "PotatoPancake1");
         Request request = new Request.Builder()
                 .url(url)
                 .header("Content-Type", "application/json")
-                .header("Authorization", credentials)
-                //.header("Authorization", "Token f89c13e25cd9d21a9d99d061d8e05e1cf5cff569")
+                //.header("Authorization", credentials)
+                .header("Authorization", "Token 097d27d467895f9758bb5fb53e267e52e08b4526")
                 .build();
 
         client.newCall(request).enqueue(new Callback() {
@@ -156,7 +161,7 @@ context.deleteDatabase("studentClasses");
                 Log.d(getActivity().getPackageName(), mMessage);
                 Log.d(getActivity().getPackageName(), "OnFailure");
                 //call.cancel();
-
+                db_connection.setText("Datebase Connection: False");
             }
 
             @Override
@@ -178,6 +183,59 @@ context.deleteDatabase("studentClasses");
                         }
                     });
                     db.close();
+                    db_connection.setText("Datebase Connection: True");
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+
+
+            }
+        });
+    }
+    public void getStudentInfo() {
+        String url = "https://capstone.blny.me/myinfo/?format=json";
+        OkHttpClient client = new OkHttpClient();
+
+        String credentials = Credentials.basic("administrator", "PotatoPancake1");
+        Request request = new Request.Builder()
+                .url(url)
+                .header("Content-Type", "application/json")
+                //.header("Authorization", credentials)
+                .header("Authorization", "Token 097d27d467895f9758bb5fb53e267e52e08b4526")
+                .build();
+
+        client.newCall(request).enqueue(new Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) {
+                String mMessage = e.getMessage();
+                Log.d(getActivity().getPackageName(), mMessage);
+                Log.d(getActivity().getPackageName(), "OnFailure");
+                //call.cancel();
+                db_connection.setText("Datebase Connection: False");
+            }
+
+            @Override
+            public void onResponse(Call call, Response response) throws IOException {
+                String mMessage = response.body().string();
+                Log.d(getActivity().getPackageName(), mMessage);
+                Log.d(getActivity().getPackageName(), "OnResponse");
+                try {
+                    JSONArray jsonObject = new JSONArray(mMessage);
+                    for (int i = 0; i < jsonObject.length(); i++) {
+                        JSONObject object = jsonObject.getJSONObject(i);
+                        prefs.edit().putString("student_id", object.getString("student_id")).apply();
+                        prefs.edit().putString("student_name", object.getString("student_name")).apply();
+                        prefs.edit().putString("student_email", object.getString("student_email")).apply();
+                        prefs.edit().putString("student_percentage", object.getString("student_percent_string")).apply();
+                    }
+                    new Handler(Looper.getMainLooper()).post(new Runnable() {
+                        @Override
+                        public void run() {
+                            Toast.makeText(getContext(), "Info Sync Complete", Toast.LENGTH_SHORT).show();
+                        }
+                    });
+                    db.close();
+                    db_connection.setText("Datebase Connection: True");
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }

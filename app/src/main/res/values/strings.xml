@@ -27,4 +27,5 @@
     <string name="class_percentage">Class Percentage:</string>
     <string name="name">Name:</string>
     <string name="email">Email</string>
+    <string name="title_activity_login">LoginActivity</string>
 </resources>

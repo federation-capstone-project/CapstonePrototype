@@ -1,12 +1,11 @@
 package au.edu.federation.capstoneprototype;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
-import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.Debug;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
@@ -15,43 +14,30 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import java.io.BufferedInputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.net.HttpURLConnection;
 import java.net.InetAddress;
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.net.URLConnection;
-
-import static org.junit.Assert.assertEquals;
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
     SharedPreferences prefs;
-    public Boolean canConnect;
-    public static MainActivity instance;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        instance = this;
-        prefs = this.getSharedPreferences("prefs", Context.MODE_PRIVATE);
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.addDrawerListener(toggle);
         toggle.syncState();
-
         NavigationView navigationView = findViewById(R.id.nav_view);
         View headerView = navigationView.getHeaderView(0);
+        prefs = this.getSharedPreferences("prefs",Context.MODE_PRIVATE);
         TextView student_name = headerView.findViewById(R.id.tv_student_name);
         TextView student_email = headerView.findViewById(R.id.tv_student_email);
         student_name.setText(prefs.getString("student_name", "Test Student"));
@@ -59,14 +45,12 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         navigationView.setNavigationItemSelectedListener(this);
         displaySelectedScreen(R.id.nav_class);
 
-
-
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        new SendfeedbackJob().execute();
+        OnlineCheck();
     }
 
     @Override
@@ -146,33 +130,28 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         drawer.closeDrawer(GravityCompat.START);
     }
 
-    private class SendfeedbackJob extends AsyncTask<Boolean, Void, Boolean> {
+    public void OnlineCheck()
+    {
+        boolean isonline;
+        Context context = getApplicationContext();
+        ConnectivityManager cm =
+                (ConnectivityManager)context.getSystemService(Context.CONNECTIVITY_SERVICE);
 
-        @Override
-        protected Boolean doInBackground(Boolean[] params) {
-
-                try{
-                    URL myUrl = new URL("http://capstone.blny.me");
-                    URLConnection connection = myUrl.openConnection();
-                    connection.setConnectTimeout(500);
-                    connection.connect();
-                    Log.e("e","DDD");
-canConnect= true;
-                    return true;
-                } catch (Exception e) {
-                    Log.e("e",e.toString());
-canConnect = false;
-                    return false;
-                }
+        NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
+        boolean isConnected = activeNetwork != null &&
+                activeNetwork.isConnectedOrConnecting();
+        isonline = isConnected;
+        if (isConnected == false) {
 
 
+            CharSequence text = "No Connection";
+            int duration = Toast.LENGTH_LONG;
 
+            Toast toast = Toast.makeText(context, text, duration);
+            toast.show();
+        }
         }
 
-        @Override
-        protected void onPostExecute(Boolean message) {
-            //process message
-        }
+
     }
-}
 
