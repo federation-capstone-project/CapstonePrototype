@@ -36,6 +36,7 @@ public class LoginActivity extends AppCompatActivity {
         setContentView(R.layout.activity_login);
         db = new DatabaseHandler(this);
         prefs = this.getSharedPreferences("prefs",Context.MODE_PRIVATE);
+
         if(prefs.getBoolean("logged_in", false)){
             Intent myIntent = new Intent(this, MainActivity.class);
             startActivity(myIntent);

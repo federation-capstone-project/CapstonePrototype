@@ -1,6 +1,8 @@
 package au.edu.federation.capstoneprototype;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
@@ -8,6 +10,7 @@ import android.net.NetworkInfo;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Debug;
+import android.provider.Settings;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
@@ -17,6 +20,7 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -37,7 +41,9 @@ import static org.junit.Assert.assertEquals;
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
     SharedPreferences prefs;
     public Boolean canConnect;
+    public Boolean noInternet;
     public static MainActivity instance;
+    public boolean open;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -68,9 +74,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     @Override
     protected void onResume() {
         super.onResume();
-        new SendfeedbackJob().execute();
+StartCheck();
     }
-
+public void StartCheck(){
+        new SendfeedbackJob().execute();
+}
     @Override
     public void onBackPressed() {
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
@@ -148,32 +156,121 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         drawer.closeDrawer(GravityCompat.START);
     }
 
-    private class SendfeedbackJob extends AsyncTask<Boolean, Void, Boolean> {
+        private class SendfeedbackJob extends AsyncTask<Boolean, Void, Boolean> {
 
         @Override
         protected Boolean doInBackground(Boolean[] params) {
+            Log.e("e", "Start Check");
+ConnectivityManager cm = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+            if (cm.getActiveNetworkInfo() != null && cm.getActiveNetworkInfo().isConnected()) {
+                noInternet= false;
+    try {
+        URL myUrl = new URL("http://capstone.blny.me");
+        URLConnection connection = myUrl.openConnection();
+        connection.setConnectTimeout(500);
+        connection.connect();
+        Log.e("e", "Connection");
+        canConnect = true;
+        return true;
+    } catch (Exception e) {
+        Log.e("e", e.toString());
+        canConnect = false;
+        return false;
+    }
 
-                try{
-                    URL myUrl = new URL("http://capstone.blny.me");
-                    URLConnection connection = myUrl.openConnection();
-                    connection.setConnectTimeout(500);
-                    connection.connect();
-                    Log.e("e","DDD");
-canConnect= true;
-                    return true;
-                } catch (Exception e) {
-                    Log.e("e",e.toString());
-canConnect = false;
-                    return false;
-                }
 
-
-
+}else
+            {
+    noInternet = true;
+    canConnect= false;
+            }
+            return true;
         }
 
         @Override
         protected void onPostExecute(Boolean message) {
             //process message
+            CreateDialog();
+        }
+    }
+    public void CreateDialog() {
+        if (noInternet && !open ) {
+            open = true;
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+            builder.setTitle("NO Connection !");
+            builder.setMessage("Please turn on you WIFI / Cellular");
+            builder.setCancelable(true);
+            builder.setNeutralButton("OK", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    open = false;
+                    Intent in = new Intent(Settings.ACTION_WIFI_SETTINGS);
+                    startActivity(in);
+
+                }
+            });
+            builder.setNegativeButton("Ignore", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    open = false;
+                    Toast.makeText(getApplicationContext(),"All Classes will be uploaded on next ",Toast.LENGTH_LONG).show();
+                }
+            });
+
+            builder.setOnKeyListener(new DialogInterface.OnKeyListener() {
+                @Override
+                public boolean onKey(DialogInterface dialog, int keyCode, KeyEvent event) {
+                    if (keyCode == KeyEvent.KEYCODE_BACK)
+                    {
+                        finish();
+                        dialog.dismiss();
+                        open = false;
+                    }
+                    return true;
+                }
+            });
+            builder.show();
+        }
+
+       if (!noInternet && !open )
+        {
+            if (!canConnect) {
+            open = true;
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+            builder.setTitle("NO Connection !");
+            builder.setMessage("Can't Connect to Server");
+            builder.setCancelable(true);
+            builder.setNeutralButton("Continue", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    open = false;
+                    Toast.makeText(getApplicationContext(),"All Classes will be uploaded on next Connection ",Toast.LENGTH_LONG).show();
+
+                }
+            });
+            builder.setNegativeButton("Quit", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    open = false;
+                                        finishAndRemoveTask();
+                    System.exit(0);
+                }
+            });
+
+            builder.setOnKeyListener(new DialogInterface.OnKeyListener() {
+                @Override
+                public boolean onKey(DialogInterface dialog, int keyCode, KeyEvent event) {
+                    if (keyCode == KeyEvent.KEYCODE_BACK)
+                    {
+                        finish();
+                        dialog.dismiss();
+                        open = false;
+                    }
+                    return true;
+                }
+            });
+            builder.show();
+            }
         }
     }
 }
