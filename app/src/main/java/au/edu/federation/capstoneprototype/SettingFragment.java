@@ -78,7 +78,7 @@ public class SettingFragment extends Fragment {
         logout_button = view.findViewById(R.id.btn_logout);
         notification_settings_button = view.findViewById(R.id.btn_android_notification);
         db_connection = view.findViewById(R.id.tv_connection);
-db_connection.setText("Connection: " + MainActivity.instance.canConnect);
+        db_connection.setText("Connection: " + MainActivity.instance.canConnect);
 
         student_id.addTextChangedListener(new TextWatcher() {
             public void afterTextChanged(Editable s) {
@@ -145,13 +145,10 @@ db_connection.setText("Connection: " + MainActivity.instance.canConnect);
     public void getStudentClasses() {
         String url = String.format("https://capstone.blny.me/myevents/?format=json", prefs.getString("student_id", "69"));
         OkHttpClient client = new OkHttpClient();
-
-        String credentials = Credentials.basic("administrator", "PotatoPancake1");
         Request request = new Request.Builder()
                 .url(url)
                 .header("Content-Type", "application/json")
-                //.header("Authorization", credentials)
-                .header("Authorization", "Token 097d27d467895f9758bb5fb53e267e52e08b4526")
+                .header("Authorization", "Token " + prefs.getString("student_token", ""))
                 .build();
 
         client.newCall(request).enqueue(new Callback() {
@@ -195,13 +192,10 @@ db_connection.setText("Connection: " + MainActivity.instance.canConnect);
     public void getStudentInfo() {
         String url = "https://capstone.blny.me/myinfo/?format=json";
         OkHttpClient client = new OkHttpClient();
-
-        String credentials = Credentials.basic("administrator", "PotatoPancake1");
         Request request = new Request.Builder()
                 .url(url)
                 .header("Content-Type", "application/json")
-                //.header("Authorization", credentials)
-                .header("Authorization", "Token 097d27d467895f9758bb5fb53e267e52e08b4526")
+                .header("Authorization", "Token " + prefs.getString("student_token", ""))
                 .build();
 
         client.newCall(request).enqueue(new Callback() {

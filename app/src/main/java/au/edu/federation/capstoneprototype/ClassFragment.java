@@ -339,13 +339,11 @@ public class ClassFragment extends Fragment {
         }
 
         RequestBody body = RequestBody.create(MEDIA_TYPE, postdata.toString());
-        String credentials = Credentials.basic("administrator", "PotatoPancake1");
         Request request = new Request.Builder()
                 .url(url)
                 .post(body)
                 .header("Content-Type", "application/json")
-                //.header("Authorization", credentials)
-                .header("Authorization", "Token 097d27d467895f9758bb5fb53e267e52e08b4526")
+                .header("Authorization", "Token " + prefs.getString("student_token", ""))
                 .build();
 
         client.newCall(request).enqueue(new Callback() {
