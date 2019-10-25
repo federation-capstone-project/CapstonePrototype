@@ -136,7 +136,7 @@ public class ClassFragment extends Fragment {
                                 .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
                                     public void onClick(DialogInterface dialog, int which) {
                                         current_class.setPresent("false");
-                                        if(isConnectedToServer()){
+                                        if(prefs.getBoolean("connected", false)){
                                             postRequest(prefs.getString("student_id", "69"), String.valueOf(current_class.getId()), false, false);
                                             Log.d(getActivity().getPackageName(), "Passed on to postRequest");
                                         }else {
@@ -159,7 +159,7 @@ public class ClassFragment extends Fragment {
                                     public void onClick(DialogInterface dialog, int which) {
                                         current_class.setPresent("true");
                                         db.updateClassPresence(current_class);
-                                        if (isConnectedToServer()) {
+                                        if(prefs.getBoolean("connected", false)){
                                             postRequest(prefs.getString("student_id", "69"), String.valueOf(current_class.getId()), true, false);
                                             Log.d(getActivity().getPackageName(), "Passed on to postRequest");
                                         }else {
@@ -194,7 +194,7 @@ public class ClassFragment extends Fragment {
                             .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
                                 public void onClick(DialogInterface dialog, int which) {
                                     current_class.setPresent("false");
-                                    if(isConnectedToServer()){
+                                    if(prefs.getBoolean("connected", false)){
                                         postRequest(prefs.getString("student_id", "69"), String.valueOf(current_class.getId()), false, true);
                                         Log.d(getActivity().getPackageName(), "Passed on to postRequest");
                                     }else {
@@ -217,7 +217,7 @@ public class ClassFragment extends Fragment {
                                 public void onClick(DialogInterface dialog, int which) {
                                     current_class.setPresent("true");
                                     db.updateClassPresence(current_class);
-                                    if(isConnectedToServer()){
+                                    if(prefs.getBoolean("connected", false)){
                                         postRequest(prefs.getString("student_id", "69"), String.valueOf(current_class.getId()), true, true);
                                         Log.d(getActivity().getPackageName(), "Passed on to postRequest");
                                     }else {
@@ -309,32 +309,6 @@ public class ClassFragment extends Fragment {
 
         }
     }
-    public boolean isConnectedToServer() {
-/*      String url, int timeout
-        Runtime runtime = Runtime.getRuntime();
-        Process proc = null; //<- Try ping -c 1 www.serverURL.com
-        try {
-            proc = runtime.exec("ping www.google.com");
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        int mPingResult = 0;
-        try {
-            mPingResult = proc .waitFor();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-        if(mPingResult == 0){
-            Log.e("S","SS");
-            return true;
-        }else{
-            Log.e("S","SSGG");
-            return false;
-        }*/
-        return false;
-    }
-
-
     /**
      * Handles the communication with the Django framework
      *

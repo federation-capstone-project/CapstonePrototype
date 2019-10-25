@@ -164,7 +164,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         List<ClassOffline> classes = db.getAll();
 
         for (ClassOffline cn : classes) {
-            postRequest(cn.getStudent_id(), cn.getClass_id(), cn.getPresent(), cn.getManual());
+            //postRequest(cn.getStudent_id(), cn.getClass_id(), cn.getPresent(), cn.getManual());
+            Log.d("anus", cn.getStudent_id() + " " + cn.getClass_id() + " " + cn.getPresent() + " " + cn.getManual());
         }
     }
     /**
@@ -235,6 +236,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                     connection.setConnectTimeout(500);
                     connection.connect();
                     Log.d(getPackageName(), "Connection to server");
+                    prefs.edit().putBoolean("connected", true).apply();
                     canConnect = true;
                     return true;
                 } catch (Exception e) {
@@ -247,6 +249,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             } else {
                 noInternet = true;
                 canConnect = false;
+                prefs.edit().putBoolean("connected", false).apply();
             }
             return true;
         }
