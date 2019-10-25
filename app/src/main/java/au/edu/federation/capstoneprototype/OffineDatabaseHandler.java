@@ -15,7 +15,7 @@ import au.edu.federation.capstoneprototype.Base.ClassOffline;
 public class OffineDatabaseHandler extends SQLiteOpenHelper {
     private static final int DATABASE_VERSION = 1;
     private static final String DATABASE_NAME = "studentClassesOffline";
-    private static final String TABLE_CLASSES = "classes";
+    private static final String TABLE_CLASSES = "classes_offline";
     private static final String KEY_ID = "id";
     private static final String KEY_CLASS = "class";
     private static final String KEY_STUDENT = "class";
@@ -30,7 +30,7 @@ public class OffineDatabaseHandler extends SQLiteOpenHelper {
     // Creating Tables
     @Override
     public void onCreate(SQLiteDatabase db) {
-        String CREATE_CONTACTS_TABLE = "CREATE TABLE "
+        String CREATE_OFFLINE_TABLE = "CREATE TABLE "
                 + TABLE_CLASSES + "("
                 + KEY_ID + " INTEGER PRIMARY KEY,"
                 + KEY_CLASS + " TEXT,"
@@ -38,7 +38,7 @@ public class OffineDatabaseHandler extends SQLiteOpenHelper {
                 + KEY_MANUAL + " TEXT,"
                 + KEY_PRESENT + " TEXT"
                 + ")";
-        db.execSQL(CREATE_CONTACTS_TABLE);
+        db.execSQL(CREATE_OFFLINE_TABLE);
     }
 
     // Upgrading database

@@ -74,7 +74,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         student_email.setText(prefs.getString("student_email", "student@test.com"));
         navigationView.setNavigationItemSelectedListener(this);
         displaySelectedScreen(R.id.nav_class);
-        OffineClassesCheck();
+        //OfflineClassesCheck();
     }
 
     @Override
@@ -160,7 +160,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         drawer.closeDrawer(GravityCompat.START);
     }
 
-    public void OffineClassesCheck(){
+    public void OfflineClassesCheck(){
         List<ClassOffline> classes = db.getAll();
 
         for (ClassOffline cn : classes) {
@@ -237,7 +237,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             if (cm.getActiveNetworkInfo() != null && cm.getActiveNetworkInfo().isConnected()) {
                 noInternet = false;
                 try {
-                    URL myUrl = new URL("https ://capstone.blny.me");
+                    URL myUrl = new URL("https://capstone.blny.me");
                     URLConnection connection = myUrl.openConnection();
                     connection.setConnectTimeout(500);
                     connection.connect();

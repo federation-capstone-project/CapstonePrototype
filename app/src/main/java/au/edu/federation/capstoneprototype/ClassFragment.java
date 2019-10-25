@@ -47,35 +47,12 @@ import okhttp3.Response;
 public class ClassFragment extends Fragment {
     public List<String> seen_macs = new ArrayList<>();
     public List<Class> list_classes = new ArrayList<>();
+    public boolean ServerConnected;
     BluetoothAdapter btAdapter;
     ClassAdapter adapter;
     ListView saved;
     SwipeRefreshLayout swipe_view;
     boolean searching = false;
-    public boolean ServerConnected;
-    /**
-     * Handles the ACTION_FOUND from the Device Discovery process
-     *
-     */
-    private final BroadcastReceiver mReceiver = new BroadcastReceiver() {
-        public void onReceive(Context context, Intent intent) {
-            String action = intent.getAction();
-            if (BluetoothDevice.ACTION_FOUND.equals(action)) {
-                BluetoothDevice device = intent.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE);
-                seen_macs.add(device.getAddress());
-                adapter.notifyDataSetChanged();
-            } else if (BluetoothAdapter.ACTION_DISCOVERY_STARTED.equals(action)) {
-                Log.d(getActivity().getPackageName(), "Discovery Started");
-                Toast.makeText(getContext(), "Searching...", Toast.LENGTH_SHORT).show();
-                searching = true;
-            } else if (BluetoothAdapter.ACTION_DISCOVERY_FINISHED.equals(action)) {
-                Log.d(getActivity().getPackageName(), "Discovery Finished");
-                Toast.makeText(getContext(), "Searching Finished", Toast.LENGTH_SHORT).show();
-                swipe_view.setRefreshing(false);
-                searching = false;
-            }
-        }
-    };
     int REQUEST_ENABLE_BT = 0;
     SharedPreferences prefs;
     Class current_class;
@@ -289,6 +266,29 @@ public class ClassFragment extends Fragment {
         }, 5000);  //the time is in miliseconds
 
     }
+    /**
+     * Handles the ACTION_FOUND from the Device Discovery process
+     *
+     */
+    private final BroadcastReceiver mReceiver = new BroadcastReceiver() {
+        public void onReceive(Context context, Intent intent) {
+            String action = intent.getAction();
+            if (BluetoothDevice.ACTION_FOUND.equals(action)) {
+                BluetoothDevice device = intent.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE);
+                seen_macs.add(device.getAddress());
+                adapter.notifyDataSetChanged();
+            } else if (BluetoothAdapter.ACTION_DISCOVERY_STARTED.equals(action)) {
+                Log.d(getActivity().getPackageName(), "Discovery Started");
+                Toast.makeText(getContext(), "Searching...", Toast.LENGTH_SHORT).show();
+                searching = true;
+            } else if (BluetoothAdapter.ACTION_DISCOVERY_FINISHED.equals(action)) {
+                Log.d(getActivity().getPackageName(), "Discovery Finished");
+                Toast.makeText(getContext(), "Searching Finished", Toast.LENGTH_SHORT).show();
+                swipe_view.setRefreshing(false);
+                searching = false;
+            }
+        }
+    };
 
     /**
      * Initiates the device discover process
@@ -330,7 +330,7 @@ public class ClassFragment extends Fragment {
             Log.e("S","SSGG");
             return false;
         }*/
-        return true;
+        return false;
     }
 
 

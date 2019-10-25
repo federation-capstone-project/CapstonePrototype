@@ -36,7 +36,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     // Creating Tables
     @Override
     public void onCreate(SQLiteDatabase db) {
-        String CREATE_CONTACTS_TABLE = "CREATE TABLE "
+        String CREATE_CLASSES_TABLE = "CREATE TABLE "
                 + TABLE_CLASSES + "("
                 + KEY_ID + " INTEGER PRIMARY KEY,"
                 + KEY_CODE + " TEXT,"
@@ -50,7 +50,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
                 + KEY_FINISH + " TEXT,"
                 + KEY_PRESENT + " TEXT"
                 + ")";
-        db.execSQL(CREATE_CONTACTS_TABLE);
+        db.execSQL(CREATE_CLASSES_TABLE);
     }
 
     // Upgrading database
