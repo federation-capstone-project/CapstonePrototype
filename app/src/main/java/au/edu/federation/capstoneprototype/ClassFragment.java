@@ -89,6 +89,7 @@ public class ClassFragment extends Fragment {
         getActivity().setTitle("Today - " + Calendar.getInstance().get(Calendar.DAY_OF_MONTH) + "/" + (Calendar.getInstance().get(Calendar.MONTH) + "/" + (Calendar.getInstance().get(Calendar.YEAR))));
         btAdapter = BluetoothAdapter.getDefaultAdapter();
         db = new DatabaseHandler(getContext());
+        db_offline = new OffineDatabaseHandler(getContext());
         if (btAdapter != null) {
             if (!btAdapter.isEnabled()) {
                 Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
@@ -139,7 +140,7 @@ public class ClassFragment extends Fragment {
                                             postRequest(prefs.getString("student_id", "69"), String.valueOf(current_class.getId()), false, false);
                                             Log.d(getActivity().getPackageName(), "Passed on to postRequest");
                                         }else {
-                                            db_offline.addClass(new ClassOffline( (int) System.currentTimeMillis(), prefs.getString("student_id", "69"), String.valueOf(current_class.getId()), "false", "false"));
+                                            db_offline.addClass(new ClassOffline( (int) System.currentTimeMillis(), String.valueOf(current_class.getId()),prefs.getString("student_id", "69"), "false", "false"));
                                             Log.d(getActivity().getPackageName(), "Passed on to offline Database");
                                         }
                                         adapter.notifyDataSetChanged();
@@ -162,7 +163,7 @@ public class ClassFragment extends Fragment {
                                             postRequest(prefs.getString("student_id", "69"), String.valueOf(current_class.getId()), true, false);
                                             Log.d(getActivity().getPackageName(), "Passed on to postRequest");
                                         }else {
-                                            db_offline.addClass(new ClassOffline( (int) System.currentTimeMillis(), prefs.getString("student_id", "69"), String.valueOf(current_class.getId()), "true", "false"));
+                                            db_offline.addClass(new ClassOffline( (int) System.currentTimeMillis(), String.valueOf(current_class.getId()),prefs.getString("student_id", "69"), "true","false" ));
                                             Log.d(getActivity().getPackageName(), "Passed on to offline Database");
                                         }
                                         adapter.notifyDataSetChanged();
@@ -197,7 +198,7 @@ public class ClassFragment extends Fragment {
                                         postRequest(prefs.getString("student_id", "69"), String.valueOf(current_class.getId()), false, true);
                                         Log.d(getActivity().getPackageName(), "Passed on to postRequest");
                                     }else {
-                                        db_offline.addClass(new ClassOffline( (int) System.currentTimeMillis(), prefs.getString("student_id", "69"), String.valueOf(current_class.getId()), "false", "true"));
+                                        db_offline.addClass(new ClassOffline( (int) System.currentTimeMillis(), String.valueOf(current_class.getId()),prefs.getString("student_id", "69"), "false", "true"));
                                         Log.d(getActivity().getPackageName(), "Passed on to offline Database");
                                     }
                                     adapter.notifyDataSetChanged();
@@ -220,7 +221,7 @@ public class ClassFragment extends Fragment {
                                         postRequest(prefs.getString("student_id", "69"), String.valueOf(current_class.getId()), true, true);
                                         Log.d(getActivity().getPackageName(), "Passed on to postRequest");
                                     }else {
-                                        db_offline.addClass(new ClassOffline( (int) System.currentTimeMillis(), prefs.getString("student_id", "69"), String.valueOf(current_class.getId()), "true", "true"));
+                                        db_offline.addClass(new ClassOffline( (int) System.currentTimeMillis(),String.valueOf(current_class.getId()),prefs.getString("student_id", "69"), "true", "true"));
                                         Log.d(getActivity().getPackageName(), "Passed on to offline Database");
                                     }
                                     adapter.notifyDataSetChanged();

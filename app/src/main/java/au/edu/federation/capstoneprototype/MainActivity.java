@@ -60,7 +60,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         setSupportActionBar(toolbar);
         instance = this;
         prefs = this.getSharedPreferences("prefs", Context.MODE_PRIVATE);
-
+        db = new OffineDatabaseHandler(this);
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.addDrawerListener(toggle);
@@ -74,7 +74,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         student_email.setText(prefs.getString("student_email", "student@test.com"));
         navigationView.setNavigationItemSelectedListener(this);
         displaySelectedScreen(R.id.nav_class);
-        //OfflineClassesCheck();
+        OfflineClassesCheck();
     }
 
     @Override
@@ -164,13 +164,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         List<ClassOffline> classes = db.getAll();
 
         for (ClassOffline cn : classes) {
-            String log = " " + cn.getId()
-                    + " " + cn.getStudent_id()
-                    + " " + cn.getClass_id()
-                    + " " + cn.getPresent()
-                    + " " + cn.getManual();
-            // Writing Classes to log
-            Log.d("Name: ", log);
+            postRequest(cn.getStudent_id(), cn.getClass_id(), cn.getPresent(), cn.getManual());
         }
     }
     /**
@@ -183,7 +177,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
      *                 TODO OnFailure saves the event to the local database
      */
 
-    public void postRequest(final String student, final String event, final Boolean attended, final Boolean manual) {
+    public void postRequest(final String student, final String event, final String attended, final String manual) {
         MediaType MEDIA_TYPE = MediaType.parse("application/json");
         String url = "https://capstone.blny.me/studentevent/";
         OkHttpClient client = new OkHttpClient();
@@ -214,7 +208,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 String mMessage = e.getMessage();
                 Log.d(getPackageName(), mMessage);
                 Log.d(getPackageName(), "OnFailure");
-                db.addClass(new ClassOffline( (int) System.currentTimeMillis() ,student, event, attended.toString(), manual.toString()));
                 //call.cancel();
             }
 

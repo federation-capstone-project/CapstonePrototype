@@ -18,7 +18,7 @@ public class OffineDatabaseHandler extends SQLiteOpenHelper {
     private static final String TABLE_CLASSES = "classes_offline";
     private static final String KEY_ID = "id";
     private static final String KEY_CLASS = "class";
-    private static final String KEY_STUDENT = "class";
+    private static final String KEY_STUDENT = "student";
     private static final String KEY_MANUAL = "finish";
     private static final String KEY_PRESENT = "present";
 
