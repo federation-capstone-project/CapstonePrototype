@@ -9,6 +9,8 @@ import android.widget.Button;
 
 import java.util.ArrayList;
 
+import au.edu.federation.capstoneprototype.Base.CalItem;
+
 public class CalendarList extends ArrayAdapter<CalItem> {
     public CalendarList(Context context, ArrayList<CalItem> calItems) {
         super(context, 0, calItems);

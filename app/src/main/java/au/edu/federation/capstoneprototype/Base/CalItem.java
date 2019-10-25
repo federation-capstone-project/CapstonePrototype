@@ -1,4 +1,4 @@
-package au.edu.federation.capstoneprototype;
+package au.edu.federation.capstoneprototype.Base;
 
 import java.util.Date;
 

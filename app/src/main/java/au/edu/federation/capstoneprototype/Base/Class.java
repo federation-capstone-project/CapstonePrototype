@@ -1,6 +1,8 @@
-package au.edu.federation.capstoneprototype;
+package au.edu.federation.capstoneprototype.Base;
 
 import java.util.Date;
+
+import au.edu.federation.capstoneprototype.Utils;
 
 public class Class {
 

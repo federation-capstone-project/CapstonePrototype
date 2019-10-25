@@ -1,6 +1,5 @@
 package au.edu.federation.capstoneprototype;
 
-import android.app.Application;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -30,9 +29,9 @@ import org.json.JSONObject;
 
 import java.io.IOException;
 
+import au.edu.federation.capstoneprototype.Base.Class;
 import okhttp3.Call;
 import okhttp3.Callback;
-import okhttp3.Credentials;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;

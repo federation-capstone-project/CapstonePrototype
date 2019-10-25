@@ -18,6 +18,9 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
+import au.edu.federation.capstoneprototype.Base.CalItem;
+import au.edu.federation.capstoneprototype.Base.Class;
+
 import static au.edu.federation.capstoneprototype.Utils.compareTwoDates;
 
 public class HistoryFragment extends Fragment {

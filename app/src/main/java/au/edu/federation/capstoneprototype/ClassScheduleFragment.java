@@ -17,6 +17,9 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
+import au.edu.federation.capstoneprototype.Base.CalItem;
+import au.edu.federation.capstoneprototype.Base.Class;
+
 import static au.edu.federation.capstoneprototype.Utils.compareTwoDates;
 
 public class ClassScheduleFragment extends Fragment {
@@ -28,7 +31,6 @@ public class ClassScheduleFragment extends Fragment {
     Calendar calendar = Calendar.getInstance();
     private TextView dateview;
     private Context _context;
-    private Button openDatePickerButton;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -79,7 +81,7 @@ public class ClassScheduleFragment extends Fragment {
         }
         dateview.setText(Calendar.getInstance().get(Calendar.DAY_OF_MONTH) + "/" + (Calendar.getInstance().get(Calendar.MONTH) + "/" + (Calendar.getInstance().get(Calendar.YEAR))));
 
-        openDatePickerButton = view.findViewById(R.id.btnitem);
+        Button openDatePickerButton = view.findViewById(R.id.btnitem);
         openDatePickerButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

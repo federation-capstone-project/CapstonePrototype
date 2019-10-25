@@ -6,10 +6,8 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.Debug;
 import android.provider.Settings;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
@@ -27,16 +25,24 @@ import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import java.io.BufferedInputStream;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.io.IOException;
-import java.io.InputStream;
-import java.net.HttpURLConnection;
-import java.net.InetAddress;
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
+import java.util.List;
 
-import static org.junit.Assert.assertEquals;
+import au.edu.federation.capstoneprototype.Base.CalItem;
+import au.edu.federation.capstoneprototype.Base.Class;
+import au.edu.federation.capstoneprototype.Base.ClassOffline;
+import okhttp3.Call;
+import okhttp3.Callback;
+import okhttp3.MediaType;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.RequestBody;
+import okhttp3.Response;
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
     SharedPreferences prefs;
@@ -44,6 +50,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     public Boolean noInternet;
     public static MainActivity instance;
     public boolean open;
+    OffineDatabaseHandler db;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -59,26 +67,22 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         toggle.syncState();
         NavigationView navigationView = findViewById(R.id.nav_view);
         View headerView = navigationView.getHeaderView(0);
-        prefs = this.getSharedPreferences("prefs",Context.MODE_PRIVATE);
+        prefs = this.getSharedPreferences("prefs", Context.MODE_PRIVATE);
         TextView student_name = headerView.findViewById(R.id.tv_student_name);
         TextView student_email = headerView.findViewById(R.id.tv_student_email);
         student_name.setText(prefs.getString("student_name", "Test Student"));
         student_email.setText(prefs.getString("student_email", "student@test.com"));
         navigationView.setNavigationItemSelectedListener(this);
         displaySelectedScreen(R.id.nav_class);
-
-
-
+        OffineClassesCheck();
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-StartCheck();
-    }
-public void StartCheck(){
         new SendfeedbackJob().execute();
-}
+    }
+
     @Override
     public void onBackPressed() {
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
@@ -156,33 +160,100 @@ public void StartCheck(){
         drawer.closeDrawer(GravityCompat.START);
     }
 
-        private class SendfeedbackJob extends AsyncTask<Boolean, Void, Boolean> {
+    public void OffineClassesCheck(){
+        List<ClassOffline> classes = db.getAll();
+
+        for (ClassOffline cn : classes) {
+            String log = " " + cn.getId()
+                    + " " + cn.getStudent_id()
+                    + " " + cn.getClass_id()
+                    + " " + cn.getPresent()
+                    + " " + cn.getManual();
+            // Writing Classes to log
+            Log.d("Name: ", log);
+        }
+    }
+    /**
+     * Handles the communication with the Django framework
+     *
+     * @param student  the student's id
+     * @param event    the class id
+     * @param attended whether the student attended
+     * @param manual   whether the student attendance was manually added
+     *                 TODO OnFailure saves the event to the local database
+     */
+
+    public void postRequest(final String student, final String event, final Boolean attended, final Boolean manual) {
+        MediaType MEDIA_TYPE = MediaType.parse("application/json");
+        String url = "https://capstone.blny.me/studentevent/";
+        OkHttpClient client = new OkHttpClient();
+        JSONObject postdata = new JSONObject();
+        try {
+            postdata.put("student", student);
+            postdata.put("event", event);
+            postdata.put("attended", attended);
+            postdata.put("manual", manual);
+            Log.d(getPackageName(), postdata.toString());
+            Log.d(getPackageName(), event);
+        } catch (JSONException e) {
+            Log.d(getPackageName(), e.getMessage());
+            e.printStackTrace();
+        }
+
+        RequestBody body = RequestBody.create(MEDIA_TYPE, postdata.toString());
+        Request request = new Request.Builder()
+                .url(url)
+                .post(body)
+                .header("Content-Type", "application/json")
+                .header("Authorization", "Token " + prefs.getString("student_token", ""))
+                .build();
+
+        client.newCall(request).enqueue(new Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) {
+                String mMessage = e.getMessage();
+                Log.d(getPackageName(), mMessage);
+                Log.d(getPackageName(), "OnFailure");
+                db.addClass(new ClassOffline( (int) System.currentTimeMillis() ,student, event, attended.toString(), manual.toString()));
+                //call.cancel();
+            }
+
+            @Override
+            public void onResponse(Call call, Response response) throws IOException {
+
+                String mMessage = response.body().string();
+                Log.d(getPackageName(), mMessage);
+                Log.d(getPackageName(), "OnResponse");
+            }
+        });
+    }
+
+    private class SendfeedbackJob extends AsyncTask<Boolean, Void, Boolean> {
 
         @Override
         protected Boolean doInBackground(Boolean[] params) {
-            Log.e("e", "Start Check");
-ConnectivityManager cm = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+            Log.d(getPackageName(), "Start Check");
+            ConnectivityManager cm = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
             if (cm.getActiveNetworkInfo() != null && cm.getActiveNetworkInfo().isConnected()) {
-                noInternet= false;
-    try {
-        URL myUrl = new URL("http://capstone.blny.me");
-        URLConnection connection = myUrl.openConnection();
-        connection.setConnectTimeout(500);
-        connection.connect();
-        Log.e("e", "Connection");
-        canConnect = true;
-        return true;
-    } catch (Exception e) {
-        Log.e("e", e.toString());
-        canConnect = false;
-        return false;
-    }
+                noInternet = false;
+                try {
+                    URL myUrl = new URL("https ://capstone.blny.me");
+                    URLConnection connection = myUrl.openConnection();
+                    connection.setConnectTimeout(500);
+                    connection.connect();
+                    Log.d(getPackageName(), "Connection to server");
+                    canConnect = true;
+                    return true;
+                } catch (Exception e) {
+                    Log.e("e", e.toString());
+                    canConnect = false;
+                    return false;
+                }
 
 
-}else
-            {
-    noInternet = true;
-    canConnect= false;
+            } else {
+                noInternet = true;
+                canConnect = false;
             }
             return true;
         }
@@ -193,12 +264,13 @@ ConnectivityManager cm = (ConnectivityManager) getSystemService(Context.CONNECTI
             CreateDialog();
         }
     }
+
     public void CreateDialog() {
-        if (noInternet && !open ) {
+        if (noInternet && !open) {
             open = true;
             AlertDialog.Builder builder = new AlertDialog.Builder(this);
-            builder.setTitle("NO Connection !");
-            builder.setMessage("Please turn on you WIFI / Cellular");
+            builder.setTitle("No Connection!");
+            builder.setMessage("Please turn on you WIFI or Mobile Datat!");
             builder.setCancelable(true);
             builder.setNeutralButton("OK", new DialogInterface.OnClickListener() {
                 @Override
@@ -213,15 +285,14 @@ ConnectivityManager cm = (ConnectivityManager) getSystemService(Context.CONNECTI
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
                     open = false;
-                    Toast.makeText(getApplicationContext(),"All Classes will be uploaded on next ",Toast.LENGTH_LONG).show();
+                    Toast.makeText(getApplicationContext(), "All Classes will be uploaded on next ", Toast.LENGTH_LONG).show();
                 }
             });
 
             builder.setOnKeyListener(new DialogInterface.OnKeyListener() {
                 @Override
                 public boolean onKey(DialogInterface dialog, int keyCode, KeyEvent event) {
-                    if (keyCode == KeyEvent.KEYCODE_BACK)
-                    {
+                    if (keyCode == KeyEvent.KEYCODE_BACK) {
                         finish();
                         dialog.dismiss();
                         open = false;
@@ -232,44 +303,42 @@ ConnectivityManager cm = (ConnectivityManager) getSystemService(Context.CONNECTI
             builder.show();
         }
 
-       if (!noInternet && !open )
-        {
+        if (!noInternet && !open) {
             if (!canConnect) {
-            open = true;
-            AlertDialog.Builder builder = new AlertDialog.Builder(this);
-            builder.setTitle("NO Connection !");
-            builder.setMessage("Can't Connect to Server");
-            builder.setCancelable(true);
-            builder.setNeutralButton("Continue", new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialog, int which) {
-                    open = false;
-                    Toast.makeText(getApplicationContext(),"All Classes will be uploaded on next Connection ",Toast.LENGTH_LONG).show();
-
-                }
-            });
-            builder.setNegativeButton("Quit", new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialog, int which) {
-                    open = false;
-                                        finishAndRemoveTask();
-                    System.exit(0);
-                }
-            });
-
-            builder.setOnKeyListener(new DialogInterface.OnKeyListener() {
-                @Override
-                public boolean onKey(DialogInterface dialog, int keyCode, KeyEvent event) {
-                    if (keyCode == KeyEvent.KEYCODE_BACK)
-                    {
-                        finish();
-                        dialog.dismiss();
+                open = true;
+                AlertDialog.Builder builder = new AlertDialog.Builder(this);
+                builder.setTitle("No Connection!");
+                builder.setMessage("App could not communicate with server.");
+                builder.setCancelable(true);
+                builder.setNeutralButton("Continue", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
                         open = false;
+                        Toast.makeText(getApplicationContext(), "All check in's will be uploaded on next connection", Toast.LENGTH_LONG).show();
+
                     }
-                    return true;
-                }
-            });
-            builder.show();
+                });
+                builder.setNegativeButton("Quit", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        open = false;
+                        finishAndRemoveTask();
+                        System.exit(0);
+                    }
+                });
+
+                builder.setOnKeyListener(new DialogInterface.OnKeyListener() {
+                    @Override
+                    public boolean onKey(DialogInterface dialog, int keyCode, KeyEvent event) {
+                        if (keyCode == KeyEvent.KEYCODE_BACK) {
+                            finish();
+                            dialog.dismiss();
+                            open = false;
+                        }
+                        return true;
+                    }
+                });
+                builder.show();
             }
         }
     }

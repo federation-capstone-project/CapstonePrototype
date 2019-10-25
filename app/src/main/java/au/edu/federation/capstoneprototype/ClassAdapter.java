@@ -11,6 +11,8 @@ import android.widget.TextView;
 
 import java.util.List;
 
+import au.edu.federation.capstoneprototype.Base.Class;
+
 
 public class ClassAdapter extends ArrayAdapter<Class> {
     private List<Class> list;

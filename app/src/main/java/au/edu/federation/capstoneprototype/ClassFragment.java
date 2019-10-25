@@ -26,8 +26,6 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
-import java.net.URL;
-import java.net.URLConnection;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
@@ -35,9 +33,10 @@ import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 
+import au.edu.federation.capstoneprototype.Base.Class;
+import au.edu.federation.capstoneprototype.Base.ClassOffline;
 import okhttp3.Call;
 import okhttp3.Callback;
-import okhttp3.Credentials;
 import okhttp3.MediaType;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
@@ -81,6 +80,7 @@ public class ClassFragment extends Fragment {
     SharedPreferences prefs;
     Class current_class;
     DatabaseHandler db;
+    OffineDatabaseHandler db_offline;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -158,7 +158,13 @@ public class ClassFragment extends Fragment {
                                 .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
                                     public void onClick(DialogInterface dialog, int which) {
                                         current_class.setPresent("false");
-                                        postRequest(prefs.getString("student_id", "69"), String.valueOf(current_class.getId()), false, false);
+                                        if(isConnectedToServer()){
+                                            postRequest(prefs.getString("student_id", "69"), String.valueOf(current_class.getId()), false, false);
+                                            Log.d(getActivity().getPackageName(), "Passed on to postRequest");
+                                        }else {
+                                            db_offline.addClass(new ClassOffline( (int) System.currentTimeMillis(), prefs.getString("student_id", "69"), String.valueOf(current_class.getId()), "false", "false"));
+                                            Log.d(getActivity().getPackageName(), "Passed on to offline Database");
+                                        }
                                         adapter.notifyDataSetChanged();
                                     }
                                 })
@@ -175,8 +181,13 @@ public class ClassFragment extends Fragment {
                                     public void onClick(DialogInterface dialog, int which) {
                                         current_class.setPresent("true");
                                         db.updateClassPresence(current_class);
-                                        postRequest(prefs.getString("student_id", "69"), String.valueOf(current_class.getId()), true, false);
-                                        Log.d(getActivity().getPackageName(), "Passed on to postRequest");
+                                        if (isConnectedToServer()) {
+                                            postRequest(prefs.getString("student_id", "69"), String.valueOf(current_class.getId()), true, false);
+                                            Log.d(getActivity().getPackageName(), "Passed on to postRequest");
+                                        }else {
+                                            db_offline.addClass(new ClassOffline( (int) System.currentTimeMillis(), prefs.getString("student_id", "69"), String.valueOf(current_class.getId()), "true", "false"));
+                                            Log.d(getActivity().getPackageName(), "Passed on to offline Database");
+                                        }
                                         adapter.notifyDataSetChanged();
                                     }
                                 })
@@ -205,7 +216,13 @@ public class ClassFragment extends Fragment {
                             .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
                                 public void onClick(DialogInterface dialog, int which) {
                                     current_class.setPresent("false");
-                                    postRequest(prefs.getString("student_id", "69"), String.valueOf(current_class.getId()), false, true);
+                                    if(isConnectedToServer()){
+                                        postRequest(prefs.getString("student_id", "69"), String.valueOf(current_class.getId()), false, true);
+                                        Log.d(getActivity().getPackageName(), "Passed on to postRequest");
+                                    }else {
+                                        db_offline.addClass(new ClassOffline( (int) System.currentTimeMillis(), prefs.getString("student_id", "69"), String.valueOf(current_class.getId()), "false", "true"));
+                                        Log.d(getActivity().getPackageName(), "Passed on to offline Database");
+                                    }
                                     adapter.notifyDataSetChanged();
                                 }
                             })
@@ -222,8 +239,13 @@ public class ClassFragment extends Fragment {
                                 public void onClick(DialogInterface dialog, int which) {
                                     current_class.setPresent("true");
                                     db.updateClassPresence(current_class);
-                                    postRequest(prefs.getString("student_id", "69"), String.valueOf(current_class.getId()), true, true);
-                                    Log.d(getActivity().getPackageName(), "Passed on to postRequest");
+                                    if(isConnectedToServer()){
+                                        postRequest(prefs.getString("student_id", "69"), String.valueOf(current_class.getId()), true, true);
+                                        Log.d(getActivity().getPackageName(), "Passed on to postRequest");
+                                    }else {
+                                        db_offline.addClass(new ClassOffline( (int) System.currentTimeMillis(), prefs.getString("student_id", "69"), String.valueOf(current_class.getId()), "true", "true"));
+                                        Log.d(getActivity().getPackageName(), "Passed on to offline Database");
+                                    }
                                     adapter.notifyDataSetChanged();
                                 }
                             })
@@ -286,8 +308,8 @@ public class ClassFragment extends Fragment {
 
         }
     }
-   /* public boolean isConnectedToServer(String url, int timeout) {
-
+    public boolean isConnectedToServer() {
+/*      String url, int timeout
         Runtime runtime = Runtime.getRuntime();
         Process proc = null; //<- Try ping -c 1 www.serverURL.com
         try {
@@ -307,8 +329,9 @@ public class ClassFragment extends Fragment {
         }else{
             Log.e("S","SSGG");
             return false;
-        }
-    }*/
+        }*/
+        return true;
+    }
 
 
     /**
@@ -321,7 +344,7 @@ public class ClassFragment extends Fragment {
      *                 TODO OnFailure saves the event to the local database
      */
 
-    public void postRequest(String student, String event, Boolean attended, Boolean manual) {
+    public void postRequest(final String student, final String event, final Boolean attended, final Boolean manual) {
         MediaType MEDIA_TYPE = MediaType.parse("application/json");
         String url = "https://capstone.blny.me/studentevent/";
         OkHttpClient client = new OkHttpClient();
@@ -352,6 +375,7 @@ public class ClassFragment extends Fragment {
                 String mMessage = e.getMessage();
                 Log.d(getActivity().getPackageName(), mMessage);
                 Log.d(getActivity().getPackageName(), "OnFailure");
+                db_offline.addClass(new ClassOffline( (int) System.currentTimeMillis() ,student, event, attended.toString(), manual.toString()));
                 //call.cancel();
             }
 
