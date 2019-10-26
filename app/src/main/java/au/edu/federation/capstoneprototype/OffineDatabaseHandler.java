@@ -21,6 +21,7 @@ public class OffineDatabaseHandler extends SQLiteOpenHelper {
     private static final String KEY_STUDENT = "student";
     private static final String KEY_MANUAL = "finish";
     private static final String KEY_PRESENT = "present";
+    private static final String KEY_ATTENDED = "attended";
 
     public OffineDatabaseHandler(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
@@ -36,7 +37,8 @@ public class OffineDatabaseHandler extends SQLiteOpenHelper {
                 + KEY_CLASS + " TEXT,"
                 + KEY_STUDENT + " TEXT,"
                 + KEY_MANUAL + " TEXT,"
-                + KEY_PRESENT + " TEXT"
+                + KEY_PRESENT + " TEXT,"
+                + KEY_ATTENDED + " TEXT"
                 + ")";
         db.execSQL(CREATE_OFFLINE_TABLE);
     }
@@ -56,12 +58,12 @@ public class OffineDatabaseHandler extends SQLiteOpenHelper {
         SQLiteDatabase db = this.getWritableDatabase();
 
         ContentValues values = new ContentValues();
-        // TODO add to DB
         values.put(KEY_ID, class_event.getId());
         values.put(KEY_CLASS, class_event.getClass_id());
         values.put(KEY_STUDENT, class_event.getStudent_id());
         values.put(KEY_PRESENT, class_event.getPresent());
         values.put(KEY_MANUAL, class_event.getManual());
+        values.put(KEY_ATTENDED, class_event.getAttended());
 
         // Inserting Row
         db.insert(TABLE_CLASSES, null, values);
@@ -72,12 +74,12 @@ public class OffineDatabaseHandler extends SQLiteOpenHelper {
     // code to get the single
     ClassOffline getClassOffline(int id) {
         SQLiteDatabase db = this.getReadableDatabase();
-        Cursor cursor = db.query(TABLE_CLASSES, new String[]{KEY_ID, KEY_CLASS, KEY_STUDENT , KEY_PRESENT, KEY_MANUAL}, KEY_ID + "=?", new String[]{String.valueOf(id)}, null, null, null, null);
+        Cursor cursor = db.query(TABLE_CLASSES, new String[]{KEY_ID, KEY_CLASS, KEY_STUDENT , KEY_PRESENT, KEY_MANUAL, KEY_ATTENDED}, KEY_ID + "=?", new String[]{String.valueOf(id)}, null, null, null, null);
         if (cursor != null)
             cursor.moveToFirst();
 
         // return contact
-        return new ClassOffline(cursor.getInt(0), cursor.getString(1), cursor.getString(2), cursor.getString(3), cursor.getString(4));
+        return new ClassOffline(cursor.getInt(0), cursor.getString(1), cursor.getString(2), cursor.getString(3), cursor.getString(4), cursor.getString(5));
     }
 
     // code to get all contacts in a list view
@@ -98,6 +100,7 @@ public class OffineDatabaseHandler extends SQLiteOpenHelper {
                 class_event.setStudent_id(cursor.getString(2));
                 class_event.setPresent(cursor.getString(3));
                 class_event.setManual(cursor.getString(4));
+                class_event.setAttended(cursor.getString(5));
                 // Adding contact to list
                 classList.add(class_event);
             } while (cursor.moveToNext());

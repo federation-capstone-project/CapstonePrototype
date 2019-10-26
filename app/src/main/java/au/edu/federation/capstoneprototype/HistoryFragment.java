@@ -62,7 +62,7 @@ public class HistoryFragment extends Fragment {
                     + " " + cn.getStart()
                     + " " + cn.getFinish()
                     + " " + cn.isPresent();
-            CalItem qq = new CalItem(cn.getName(), cn.getTeacherName(), cn.getLocation(), Utils.string_time(cn.getStart()) + " - " + Utils.string_time(cn.getFinish()), Utils.string_date_full(cn.getDate()), cn.isPresent());
+            CalItem qq = new CalItem(cn.getName(), cn.getTeacherName(), cn.getLocation(), Utils.string_time(cn.getStart()) + " - " + Utils.string_time(cn.getFinish()), Utils.string_date_full(cn.getDate()), cn.getAttended());
             sss.add(qq);
             // Writing Classes to log
             Log.d("Name: ", log);

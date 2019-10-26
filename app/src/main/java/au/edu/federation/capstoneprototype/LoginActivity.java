@@ -156,7 +156,7 @@ public class LoginActivity extends AppCompatActivity {
                     for (int i = 0; i < jsonObject.length(); i++) {
                         JSONObject object = jsonObject.getJSONObject(i);
                         Log.d(getPackageName(), object.getString("event_title"));
-                        db.addClass(new Class(object.getInt("id"), object.getString("course_code"), object.getString("event_title"), object.getInt("event_clinician"), object.getString("clinician_name"), object.getString("event_location"), object.getString("clinician_mac"), object.getString("event_starttime"), object.getString("event_starttime"), object.getString("event_finishtime"), "false"));
+                        db.addClass(new Class(object.getInt("id"), object.getString("course_code"), object.getString("event_title"), object.getInt("event_clinician"), object.getString("clinician_name"), object.getString("event_location"), object.getString("clinician_mac"), object.getString("event_starttime"), object.getString("event_starttime"), object.getString("event_finishtime"), "false", "false"));
                     }
                     new Handler(Looper.getMainLooper()).post(new Runnable() {
                         @Override

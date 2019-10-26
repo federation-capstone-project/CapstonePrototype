@@ -17,13 +17,12 @@ public class Class {
     private String start; //
     private String finish; //
     private String present;
+    private String attended;
     private boolean cansee;
     private Date comp_date;
-
     public Class() {
     }
-
-    public Class(int id, String code, String name, int teacher_id, String teacher_name, String location, String mac, String date, String start, String finish, String present) {
+    public Class(int id, String code, String name, int teacher_id, String teacher_name, String location, String mac, String date, String start, String finish, String present, String attended) {
         this.id = id;
         this.code = code;
         this.name = name;
@@ -35,8 +34,17 @@ public class Class {
         this.start = start;
         this.finish = finish;
         this.present = present;
+        this.attended = attended;
         comp_date = Utils.string_date_full(start);
 
+    }
+
+    public String getAttended() {
+        return attended;
+    }
+
+    public void setAttended(String attended) {
+        this.attended = attended;
     }
 
     public Date getComp_date() {

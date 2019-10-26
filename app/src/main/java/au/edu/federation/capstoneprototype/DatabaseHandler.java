@@ -27,6 +27,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     private static final String KEY_START = "start";
     private static final String KEY_FINISH = "finish";
     private static final String KEY_PRESENT = "present";
+    private static final String KEY_ATTENDED= "attended";
 
     public DatabaseHandler(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
@@ -48,7 +49,8 @@ public class DatabaseHandler extends SQLiteOpenHelper {
                 + KEY_DATE + " TEXT,"
                 + KEY_START + " TEXT,"
                 + KEY_FINISH + " TEXT,"
-                + KEY_PRESENT + " TEXT"
+                + KEY_PRESENT + " TEXT,"
+                + KEY_ATTENDED + " TEXT"
                 + ")";
         db.execSQL(CREATE_CLASSES_TABLE);
     }
@@ -80,6 +82,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         values.put(KEY_START, class_event.getStart());
         values.put(KEY_FINISH, class_event.getFinish());
         values.put(KEY_PRESENT, class_event.isPresent());
+        values.put(KEY_ATTENDED, class_event.getAttended());
 
         // Inserting Row
         db.insert(TABLE_CLASSES, null, values);
@@ -90,12 +93,12 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     // code to get the single
     Class getClass(int id) {
         SQLiteDatabase db = this.getReadableDatabase();
-        Cursor cursor = db.query(TABLE_CLASSES, new String[]{KEY_ID, KEY_CODE, KEY_NAME, KEY_TEACHER_ID, KEY_TEACHER_NAME, KEY_LOCATION, KEY_MAC, KEY_DATE, KEY_START, KEY_FINISH, KEY_PRESENT}, KEY_ID + "=?", new String[]{String.valueOf(id)}, null, null, null, null);
+        Cursor cursor = db.query(TABLE_CLASSES, new String[]{KEY_ID, KEY_CODE, KEY_NAME, KEY_TEACHER_ID, KEY_TEACHER_NAME, KEY_LOCATION, KEY_MAC, KEY_DATE, KEY_START, KEY_FINISH, KEY_PRESENT, KEY_ATTENDED}, KEY_ID + "=?", new String[]{String.valueOf(id)}, null, null, null, null);
         if (cursor != null)
             cursor.moveToFirst();
 
         // return contact
-        return new Class(cursor.getInt(0), cursor.getString(1), cursor.getString(2), cursor.getInt(3), cursor.getString(4), cursor.getString(5), cursor.getString(6), cursor.getString(7), cursor.getString(8), cursor.getString(9), cursor.getString(10));
+        return new Class(cursor.getInt(0), cursor.getString(1), cursor.getString(2), cursor.getInt(3), cursor.getString(4), cursor.getString(5), cursor.getString(6), cursor.getString(7), cursor.getString(8), cursor.getString(9), cursor.getString(10), cursor.getString(11));
     }
 
     // code to get all contacts in a list view
@@ -122,6 +125,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
                 class_event.setStart(cursor.getString(8));
                 class_event.setFinish(cursor.getString(9));
                 class_event.setPresent(cursor.getString(10));
+                class_event.setAttended(cursor.getString(11));
                 // Adding contact to list
                 classList.add(class_event);
             } while (cursor.moveToNext());
@@ -143,6 +147,14 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues cv = new ContentValues();
         cv.put(KEY_PRESENT, present);
+        db.update(TABLE_CLASSES, cv, KEY_ID + " = ?", new String[]{String.valueOf(class_event.getId())});
+        db.close();
+    }
+    // Deleting single contact
+    public void updateClassAttendance(Class class_event, String attendance) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues cv = new ContentValues();
+        cv.put(KEY_ATTENDED, attendance);
         db.update(TABLE_CLASSES, cv, KEY_ID + " = ?", new String[]{String.valueOf(class_event.getId())});
         db.close();
     }

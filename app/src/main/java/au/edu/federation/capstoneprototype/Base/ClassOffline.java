@@ -2,6 +2,25 @@ package au.edu.federation.capstoneprototype.Base;
 
 
 public class ClassOffline {
+    private int id;
+    private String class_id;
+    private String student_id;
+    private String present;
+    private String manual;
+    private String attended;
+
+    public ClassOffline(int id, String class_id, String student_id, String present, String manual, String attended) {
+        this.id = id;
+        this.class_id = class_id;
+        this.student_id = student_id;
+        this.present = present;
+        this.manual = manual;
+        this.attended = attended;
+    }
+
+    public ClassOffline() {
+    }
+
     public int getId() {
         return id;
     }
@@ -42,20 +61,12 @@ public class ClassOffline {
         this.manual = manual;
     }
 
-    public ClassOffline(int id, String class_id, String student_id, String present, String manual) {
-        this.id = id;
-        this.class_id = class_id;
-        this.student_id = student_id;
-        this.present = present;
-        this.manual = manual;
-    }
-    public ClassOffline() {
+    public String getAttended() {
+        return attended;
     }
 
-    private int id;
-    private String class_id;
-    private String student_id;
-    private String present;
-    private String manual;
+    public void setAttended(String attended) {
+        this.attended = attended;
+    }
 
 }
