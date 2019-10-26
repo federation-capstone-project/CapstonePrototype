@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.res.Resources;
 import android.net.ConnectivityManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -180,7 +181,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     public void postRequest(final String student, final String event, final String attended, final String manual) {
         MediaType MEDIA_TYPE = MediaType.parse("application/json");
-        String url = "https://capstone.blny.me/studentevent/";
+        String url = getString(R.string.base_url) + "/studentevent/";
         OkHttpClient client = new OkHttpClient();
         JSONObject postdata = new JSONObject();
         try {
@@ -231,7 +232,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             if (cm.getActiveNetworkInfo() != null && cm.getActiveNetworkInfo().isConnected()) {
                 noInternet = false;
                 try {
-                    URL myUrl = new URL("https://capstone.blny.me");
+                    URL myUrl = new URL(getResources().getString(R.string.base_url));
                     URLConnection connection = myUrl.openConnection();
                     connection.setConnectTimeout(500);
                     connection.connect();

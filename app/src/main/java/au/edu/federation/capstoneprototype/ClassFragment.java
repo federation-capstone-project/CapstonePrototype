@@ -47,7 +47,6 @@ import okhttp3.Response;
 public class ClassFragment extends Fragment {
     public List<String> seen_macs = new ArrayList<>();
     public List<Class> list_classes = new ArrayList<>();
-    public boolean ServerConnected;
     BluetoothAdapter btAdapter;
     ClassAdapter adapter;
     ListView saved;
@@ -326,7 +325,7 @@ public class ClassFragment extends Fragment {
 
     public void postRequest(final String student, final String event, final Boolean attended, final Boolean manual) {
         MediaType MEDIA_TYPE = MediaType.parse("application/json");
-        String url = "https://capstone.blny.me/studentevent/";
+        String url = getString(R.string.base_url) + "/studentevent/";
         OkHttpClient client = new OkHttpClient();
         JSONObject postdata = new JSONObject();
         try {

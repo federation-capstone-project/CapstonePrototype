@@ -39,13 +39,11 @@ import okhttp3.Response;
 
 public class SettingFragment extends Fragment {
     SharedPreferences prefs;
-    EditText student_id;
     CheckBox bluetooth_auto;
     Button sync_classes;
     DatabaseHandler db;
     Button notification_settings_button,logout_button;
     Context context;
-    String manufacturer,model,phone_name;
     TextView manufacturer_textview,model_textview,phone_name_textview,db_connection;
 
     @Override
@@ -126,7 +124,7 @@ public class SettingFragment extends Fragment {
     }
 
     public void getStudentClasses() {
-        String url = String.format("https://capstone.blny.me/myevents/?format=json", prefs.getString("student_id", "69"));
+        String url = getString(R.string.base_url) + "/myevents/?format=json";
         OkHttpClient client = new OkHttpClient();
         Request request = new Request.Builder()
                 .url(url)
@@ -173,7 +171,7 @@ public class SettingFragment extends Fragment {
         });
     }
     public void getStudentInfo() {
-        String url = "https://capstone.blny.me/myinfo/?format=json";
+        String url = getString(R.string.base_url) + "/myinfo/?format=json";
         OkHttpClient client = new OkHttpClient();
         Request request = new Request.Builder()
                 .url(url)

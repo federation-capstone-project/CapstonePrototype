@@ -66,7 +66,7 @@ public class LoginActivity extends AppCompatActivity {
     }
     public void getStudentToken(String un, String pw) {
         MediaType MEDIA_TYPE = MediaType.parse("application/json");
-        String url = "https://capstone.blny.me/api-token-auth/";
+        String url = getString(R.string.base_url) + "/api-token-auth/";
         OkHttpClient client = new OkHttpClient();
         JSONObject postdata = new JSONObject();
         try {
@@ -128,7 +128,7 @@ public class LoginActivity extends AppCompatActivity {
         });
     }
     public void getStudentClasses() {
-        String url = String.format("https://capstone.blny.me/myevents/?format=json", prefs.getString("student_id", "69"));
+        String url = getString(R.string.base_url) + "/myevents/?format=json";
         OkHttpClient client = new OkHttpClient();
 
         Request request = new Request.Builder()
@@ -174,7 +174,7 @@ public class LoginActivity extends AppCompatActivity {
         });
     }
     public void getStudentInfo() {
-        String url = "https://capstone.blny.me/myinfo/?format=json";
+        String url = getString(R.string.base_url) + "/myinfo/?format=json";
         OkHttpClient client = new OkHttpClient();
         Request request = new Request.Builder()
                 .url(url)
