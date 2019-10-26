@@ -260,7 +260,7 @@ public class ClassFragment extends Fragment {
                 // for (int i = 0; i < adapter.getCount()  ; i++) {
                 if (adapter.getCount() > 0) {
                     if (seen_macs.contains(adapter.getItem(0).getMac())) {
-                        adapter.getItem(1).setCansee(true);
+                        adapter.getItem(0).setCansee(true);
                         adapter.notifyDataSetChanged();
                         Log.e("HI", adapter.getItem(0).getName());
                         //}
