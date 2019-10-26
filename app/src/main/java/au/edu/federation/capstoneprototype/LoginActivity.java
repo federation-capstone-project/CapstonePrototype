@@ -12,6 +12,7 @@ import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
@@ -34,9 +35,11 @@ public class LoginActivity extends AppCompatActivity {
     SharedPreferences prefs;
     DatabaseHandler db;
     EditText etUsername, etPassword;
+    Button btnLogin;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_login);
         db = new DatabaseHandler(this);
         prefs = this.getSharedPreferences("prefs",Context.MODE_PRIVATE);
 
@@ -48,8 +51,8 @@ public class LoginActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
         etUsername = findViewById(R.id.et_username);
         etPassword = findViewById(R.id.et_password);
-        FloatingActionButton fab = findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
+        btnLogin = findViewById(R.id.btn_login);
+        btnLogin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 if(!TextUtils.isEmpty(etUsername.getText().toString()) || !TextUtils.isEmpty(etPassword.getText().toString())){

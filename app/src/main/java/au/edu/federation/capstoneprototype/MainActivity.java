@@ -164,7 +164,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         List<ClassOffline> classes = db.getAll();
 
         for (ClassOffline cn : classes) {
-            //postRequest(cn.getStudent_id(), cn.getClass_id(), cn.getPresent(), cn.getManual());
+            postRequest(cn.getStudent_id(), cn.getClass_id(), cn.getPresent(), cn.getManual());
             Log.d("anus", cn.getStudent_id() + " " + cn.getClass_id() + " " + cn.getPresent() + " " + cn.getManual());
         }
     }

@@ -61,10 +61,8 @@ public class SettingFragment extends Fragment {
         //you can set the title for your toolbar here for different fragments different titles
         getActivity().setTitle("Settings");
         db = new DatabaseHandler(getContext());
-        student_id = view.findViewById(R.id.et_student_id);
         bluetooth_auto = view.findViewById(R.id.cb_bluetooth_auto);
         sync_classes = view.findViewById(R.id.btn_redownload_data);
-        student_id.setText(prefs.getString("student_id", "Not Set"));
         bluetooth_auto.setChecked(prefs.getBoolean("bluetooth_auto", true));
 
         context = getContext();
@@ -76,20 +74,6 @@ public class SettingFragment extends Fragment {
         manufacturer_textview.setText(Build.MANUFACTURER);
         logout_button = view.findViewById(R.id.btn_logout);
         notification_settings_button = view.findViewById(R.id.btn_android_notification);
-        db_connection = view.findViewById(R.id.tv_connection);
-        db_connection.setText("Connection: " + MainActivity.instance.canConnect);
-
-        student_id.addTextChangedListener(new TextWatcher() {
-            public void afterTextChanged(Editable s) {
-                prefs.edit().putString("student_id", s.toString()).apply();
-            }
-
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-            }
-
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-            }
-        });
         bluetooth_auto.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {

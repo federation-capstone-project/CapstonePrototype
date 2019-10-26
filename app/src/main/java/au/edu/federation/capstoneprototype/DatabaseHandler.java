@@ -139,10 +139,10 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     }
 
     // Deleting single contact
-    public void updateClassPresence(Class class_event) {
+    public void updateClassPresence(Class class_event, String present) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues cv = new ContentValues();
-        cv.put(KEY_PRESENT, "true");
+        cv.put(KEY_PRESENT, present);
         db.update(TABLE_CLASSES, cv, KEY_ID + " = ?", new String[]{String.valueOf(class_event.getId())});
         db.close();
     }

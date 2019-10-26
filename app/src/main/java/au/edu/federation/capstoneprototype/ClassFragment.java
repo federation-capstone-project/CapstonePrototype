@@ -136,6 +136,7 @@ public class ClassFragment extends Fragment {
                                 .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
                                     public void onClick(DialogInterface dialog, int which) {
                                         current_class.setPresent("false");
+                                        db.updateClassPresence(current_class, "false");
                                         if(prefs.getBoolean("connected", false)){
                                             postRequest(prefs.getString("student_id", "69"), String.valueOf(current_class.getId()), false, false);
                                             Log.d(getActivity().getPackageName(), "Passed on to postRequest");
@@ -158,7 +159,7 @@ public class ClassFragment extends Fragment {
                                 .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
                                     public void onClick(DialogInterface dialog, int which) {
                                         current_class.setPresent("true");
-                                        db.updateClassPresence(current_class);
+                                        db.updateClassPresence(current_class, "true");
                                         if(prefs.getBoolean("connected", false)){
                                             postRequest(prefs.getString("student_id", "69"), String.valueOf(current_class.getId()), true, false);
                                             Log.d(getActivity().getPackageName(), "Passed on to postRequest");
@@ -194,6 +195,7 @@ public class ClassFragment extends Fragment {
                             .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
                                 public void onClick(DialogInterface dialog, int which) {
                                     current_class.setPresent("false");
+                                    db.updateClassPresence(current_class, "true");
                                     if(prefs.getBoolean("connected", false)){
                                         postRequest(prefs.getString("student_id", "69"), String.valueOf(current_class.getId()), false, true);
                                         Log.d(getActivity().getPackageName(), "Passed on to postRequest");
@@ -202,6 +204,7 @@ public class ClassFragment extends Fragment {
                                         Log.d(getActivity().getPackageName(), "Passed on to offline Database");
                                     }
                                     adapter.notifyDataSetChanged();
+                                    Log.d("here", db.getClass(current_class.getId()).isPresent());
                                 }
                             })
 
@@ -216,7 +219,7 @@ public class ClassFragment extends Fragment {
                             .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
                                 public void onClick(DialogInterface dialog, int which) {
                                     current_class.setPresent("true");
-                                    db.updateClassPresence(current_class);
+                                    db.updateClassPresence(current_class, "true");
                                     if(prefs.getBoolean("connected", false)){
                                         postRequest(prefs.getString("student_id", "69"), String.valueOf(current_class.getId()), true, true);
                                         Log.d(getActivity().getPackageName(), "Passed on to postRequest");
