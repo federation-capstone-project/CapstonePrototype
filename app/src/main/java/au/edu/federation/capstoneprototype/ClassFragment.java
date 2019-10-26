@@ -314,7 +314,7 @@ public class ClassFragment extends Fragment {
         }
     }
     /**
-     * Handles the communication with the Django framework
+     * Handles the communication with the Django framework in posting check in and check out events
      *
      * @param student  the student's id
      * @param event    the class id

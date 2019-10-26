@@ -122,7 +122,10 @@ public class SettingFragment extends Fragment {
         });
 
     }
-
+    /**
+     * Handles the communication with the Django framework with fetching a students classes
+     *
+     */
     public void getStudentClasses() {
         String url = getString(R.string.base_url) + "/myevents/?format=json";
         OkHttpClient client = new OkHttpClient();
@@ -170,6 +173,10 @@ public class SettingFragment extends Fragment {
             }
         });
     }
+    /**
+     * Handles the communication with the Django framework with fetching a students details
+     *
+     */
     public void getStudentInfo() {
         String url = getString(R.string.base_url) + "/myinfo/?format=json";
         OkHttpClient client = new OkHttpClient();

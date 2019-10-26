@@ -170,13 +170,12 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         }
     }
     /**
-     * Handles the communication with the Django framework
+     * Handles the communication with the Django framework in posting check in and check out events
      *
      * @param student  the student's id
      * @param event    the class id
      * @param attended whether the student attended
      * @param manual   whether the student attendance was manually added
-     *                 TODO OnFailure saves the event to the local database
      */
 
     public void postRequest(final String student, final String event, final String attended, final String manual) {

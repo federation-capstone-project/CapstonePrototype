@@ -101,7 +101,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         return new Class(cursor.getInt(0), cursor.getString(1), cursor.getString(2), cursor.getInt(3), cursor.getString(4), cursor.getString(5), cursor.getString(6), cursor.getString(7), cursor.getString(8), cursor.getString(9), cursor.getString(10), cursor.getString(11));
     }
 
-    // code to get all contacts in a list view
+    // code to get all in a list view
     public List<Class> getAllClasses() {
         List<Class> classList = new ArrayList<>();
         // Select All Query
@@ -135,14 +135,14 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         return classList;
     }
 
-    // Deleting single contact
+    // Deleting single
     public void deleteClass(Class class_event) {
         SQLiteDatabase db = this.getWritableDatabase();
         db.delete(TABLE_CLASSES, KEY_ID + " = ?", new String[]{String.valueOf(class_event.getId())});
         db.close();
     }
 
-    // Deleting single contact
+    // Deleting single
     public void updateClassPresence(Class class_event, String present) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues cv = new ContentValues();
@@ -150,7 +150,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         db.update(TABLE_CLASSES, cv, KEY_ID + " = ?", new String[]{String.valueOf(class_event.getId())});
         db.close();
     }
-    // Deleting single contact
+    // Deleting single
     public void updateClassAttendance(Class class_event, String attendance) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues cv = new ContentValues();
