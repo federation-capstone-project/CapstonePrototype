@@ -79,7 +79,7 @@ public class ClassScheduleFragment extends Fragment {
                 adapter.add(sss.get(i));
             }
         }
-        dateview.setText(Calendar.getInstance().get(Calendar.DAY_OF_MONTH) + "/" + (Calendar.getInstance().get(Calendar.MONTH) + "/" + (Calendar.getInstance().get(Calendar.YEAR))));
+        dateview.setText(Calendar.getInstance().get(Calendar.DAY_OF_MONTH) + "/" + (Calendar.getInstance().get(Calendar.MONTH)+1 + "/" + (Calendar.getInstance().get(Calendar.YEAR))));
 
         Button openDatePickerButton = view.findViewById(R.id.btnitem);
         openDatePickerButton.setOnClickListener(new View.OnClickListener() {

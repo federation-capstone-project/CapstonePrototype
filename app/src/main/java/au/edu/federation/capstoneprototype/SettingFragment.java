@@ -193,7 +193,7 @@ public class SettingFragment extends Fragment {
                 Log.d(getActivity().getPackageName(), mMessage);
                 Log.d(getActivity().getPackageName(), "OnFailure");
                 //call.cancel();
-                db_connection.setText("Datebase Connection: False");
+                //db_connection.setText("Datebase Connection: False");
             }
 
             @Override
@@ -217,7 +217,7 @@ public class SettingFragment extends Fragment {
                         }
                     });
                     db.close();
-                    db_connection.setText("Datebase Connection: True");
+                    //db_connection.setText("Datebase Connection: True");
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }

@@ -85,7 +85,7 @@ public class ClassFragment extends Fragment {
     public void onViewCreated(final View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         //you can set the title for your toolbar here for different fragments different titles
-        getActivity().setTitle("Today - " + Calendar.getInstance().get(Calendar.DAY_OF_MONTH) + "/" + (Calendar.getInstance().get(Calendar.MONTH) + "/" + (Calendar.getInstance().get(Calendar.YEAR))));
+        getActivity().setTitle("Today - " + Calendar.getInstance().get(Calendar.DAY_OF_MONTH) + "/" + (Calendar.getInstance().get(Calendar.MONTH)+1 + "/" + (Calendar.getInstance().get(Calendar.YEAR))));
         btAdapter = BluetoothAdapter.getDefaultAdapter();
         db = new DatabaseHandler(getContext());
         db_offline = new OffineDatabaseHandler(getContext());
