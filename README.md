@@ -1,2 +1,2 @@
 # CapstonePrototype
-prototype app that connects with tile and shows required functionality
+Android appilcation Frontend for https://github.com/federation-capstone-project/ProjectServer
